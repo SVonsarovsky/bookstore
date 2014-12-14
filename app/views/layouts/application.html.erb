@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookstore</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%- if session[:user_id].present? %>
+    <%= link_to 'Sign out', '#' %>
+
+    <% if flash[:notice].present? %>
+        <div id="notice"><%= flash[:notice] %></div>
+    <% end %>
+<%- else %>
+    <%= link_to 'Sign up', register_path %>
+<%- end %>
+
+<%= yield %>
+
+</body>
+</html>
