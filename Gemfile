@@ -42,6 +42,14 @@ gem 'execjs'
 gem 'therubyracer'
 
 gem 'devise'
+gem 'omniauth-facebook'
+gem 'cancancan'
+gem 'rails_admin'
+gem 'carrierwave'
+gem 'bootstrap-sass'
+gem 'autoprefixer-rails'
+gem 'mini_magick'
+
 
 group :development, :test do
   gem 'rspec-rails'

@@ -8,17 +8,24 @@
 </head>
 <body>
 
-<%- if session[:user_id].present? %>
-    <%= link_to 'Sign out', '#' %>
-
-    <% if flash[:notice].present? %>
-        <div id="notice"><%= flash[:notice] %></div>
-    <% end %>
-<%- else %>
-    <%= link_to 'Sign up', register_path %>
-<%- end %>
-
-<%= yield %>
+<div id="main-container" class="container" style="border:1px solid #000">
+    <div id="user-nav">
+        <% if user_signed_in? %>
+            Logged in as <strong><%= current_user.email %></strong>.
+            <%= link_to 'Edit profile', edit_user_registration_path %> |
+            <%= link_to "Logout", destroy_user_session_path, method: :delete %>
+        <% else %>
+            <%= link_to "Sign up", register_path %> |
+            <%= link_to "Login", login_path %>
+        <% end %>
+    </div>
+    <div id="flash-message">
+      <% flash.each do |name, msg| %>
+          <%= content_tag :div, msg, id: "flash-#{name}" %>
+      <% end %>
+    </div>
+    <%= yield %>
+</div>
 
 </body>
 </html>

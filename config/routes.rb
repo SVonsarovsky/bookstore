@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
-  get 'register', to: 'users#new', as: 'register'
-  resources :users
+  devise_for :admins
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+  devise_for :users
+  devise_scope :user do
+    get '/register' => 'devise/registrations#new'
+    get '/login' => 'devise/sessions#new'
+    get '/logout' => 'devise/sessions#destroy'
+  end
   root 'pages#home'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
