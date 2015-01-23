@@ -3,6 +3,11 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-  validates :email, :password, presence: true
-  validates :email, uniqueness: true
+
+  mount_uploader :photo, PhotoUploader
+  validates :email, presence: true, uniqueness: true
+
+  def name
+    email.split('@').first
+  end
 end

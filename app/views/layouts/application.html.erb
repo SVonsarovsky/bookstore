@@ -1,30 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Bookstore</title>
+  <title>The Bookstore</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<div id="main-container" class="container" style="border:1px solid #000">
-    <div id="user-nav">
+<div class="container">
+  <header>
+    <div class="row">
+      <div class="col-md-3 logo">Bookstore</div>
+      <div class="col-md-3">
+        <%= home_page? ? 'HOME' : link_to('HOME', root_path) %> |
+        <%= shop_page? ? 'SHOP' : link_to('SHOP', shop_path) %>
+      </div>
+      <div class="col-md-3 text-center">
+        <i class="glyphicon glyphicon-shopping-cart"></i> CART: (EMPTY)
+      </div>
+      <div class="col-md-3 text-right">
         <% if user_signed_in? %>
-            Logged in as <strong><%= current_user.email %></strong>.
-            <%= link_to 'Edit profile', edit_user_registration_path %> |
-            <%= link_to "Logout", destroy_user_session_path, method: :delete %>
+            <%= link_to 'Settings', edit_user_registration_path %> |
+            <a href="/orders">Orders</a> |
+            <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
         <% else %>
-            <%= link_to "Sign up", register_path %> |
-            <%= link_to "Login", login_path %>
+            <%= link_to 'Sign up', sign_up_path %> |
+            <%= link_to 'Sign in', sign_in_path %>
         <% end %>
+      </div>
     </div>
-    <div id="flash-message">
-      <% flash.each do |name, msg| %>
-          <%= content_tag :div, msg, id: "flash-#{name}" %>
-      <% end %>
-    </div>
-    <%= yield %>
+  </header>
+
+  <div id="flash-message">
+    <% flash.each do |name, msg| %>
+      <%= content_tag :div, msg, id: "flash-#{name}" %>
+    <% end %>
+  </div>
+
+  <%= yield %>
+
+  <footer>
+    <p class="pull-right"><a href="#">Back to top</a></p>
+    <p>&copy; 2014&ndash;<%=Time.now.year %> Bookstore, Inc.</p>
+  </footer>
 </div>
 
 </body>

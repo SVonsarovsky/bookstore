@@ -1,0 +1,35 @@
+<h1><%= @book.title %></h1>
+<div class="book clearfix">
+    <img src="<%= @book.image %>" alt="<%= @book.title %>" class="pull-left" />
+    <form class="form-inline" method="post">
+        <div class="pull-right">
+            <input type="number" class="form-control quantity" name="quantity" min="1" max="20" value="1" />
+            <input class="btn btn-default" type="submit" value="Add To Cart">
+        </div>
+        <div class="price">$ <%= @book.price %></div>
+        <p><%= @book.full_description.html_safe %></p>
+    </form>
+</div>
+<div class="review-list">
+    <div class="clearfix">
+        <h2 class="pull-left">Reviews</h2>
+        <br />
+        <a href="/review/create">Add review for this book</a>
+    </div>
+    <%- if @reviews.length %>
+      <%- @reviews.each do |review| %>
+      <div class="review">
+        <div class="pull-left rating">
+          <%- (Review::MIN_RATING..Review::MAX_RATING).each do |rating| %>
+            <input name="star<%= review.id %>" type="radio" class="star" disabled="disabled"<%= (rating==review.rating ? ' checked="checked"':'') %>/>
+          <%- end %>
+        </div>
+        <span class="date"><%= review.created_at.strftime('%H:%M at %B %d, %Y') %></span>
+        <div class="author">by <%= mail_to(review.user.email, review.user.name) %></div>
+        <p><%= review.text %></p>
+      </div>
+    <%- end %>
+    <%- else %>
+    <p>No reviews yet&hellip;</p>
+    <%- end %>
+</div>

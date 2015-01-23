@@ -31,10 +31,125 @@ RailsAdmin.config do |config|
     delete
     show_in_app
 
-    config.included_models = ['User']
+    config.included_models = ['User', 'Author', 'Category', 'Book', 'Review']
 
     ## With an audit adapter, you can add:
     # history_index
     # history_show
+
+    config.model User do
+      list do
+        field :id
+        field :email
+        field :photo
+        field :sign_in_count
+        field :last_sign_in_at
+      end
+      edit do
+        field :email
+        field :password
+        field :password_confirmation
+        field :photo
+      end
+      show do
+        field :id
+        field :email
+        field :photo
+        field :sign_in_count
+        field :current_sign_in_at
+        field :last_sign_in_at
+        field :current_sign_in_ip
+        field :last_sign_in_ip
+        field :created_at
+        field :updated_at
+      end
+    end
+    config.model Book do
+      list do
+        field :id
+        field :title
+        field :price
+        field :image
+        field :authors
+        field :categories
+      end
+      edit do
+        field :title
+        field :price
+        field :short_description
+        field :image
+        field :authors
+        field :categories
+        field :full_description, :ck_editor
+      end
+      show do
+        field :id
+        field :title
+        field :price
+        field :short_description
+        field :full_description
+        field :image
+        field :authors do
+          searchable :first_name, :last_name
+        end
+        field :categories
+      end
+    end
+    config.model Category do
+      list do
+        field :id
+        field :name
+      end
+      show do
+        field :id
+        field :name
+      end
+      edit do
+        #field :id
+        field :name
+      end
+    end
+    config.model Author do
+      list do
+        field :id
+        field :first_name
+        field :last_name
+        field :description
+      end
+      show do
+        field :id
+        field :first_name
+        field :last_name
+        field :description
+      end
+      edit do
+        field :first_name
+        field :last_name
+        field :description
+      end
+    end
+    config.model Review do
+      list do
+        field :id
+        field :book
+        field :user
+        field :rating
+        field :review
+      end
+      show do
+        field :id
+        field :book
+        field :user
+        field :rating
+        field :text
+      end
+      edit do
+        field :book
+        field :user
+        field :rating
+        field :text
+      end
+    end
+
   end
 end

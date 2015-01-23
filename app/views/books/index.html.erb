@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-md-9">
+      <%- if shop_page? %>
+          <h1>Shop</h1>
+      <%- else %>
+          <div class="breadcrumbs">
+            <%= link_to 'Home', root_path %> » <%= link_to 'Shop', shop_path %> » <%= @category.name %>
+          </div>
+          <h1>Shop &mdash; <%= @category.name %></h1>
+      <%- end %>
+        <% if @books.length %>
+        <div class="row shop-list">
+            <% @books.each do |book| %>
+            <div class="col-md-4">
+                <img src="<%= book.image.carousel %>" alt="<%= book.title %>" class="img-thumbnail" />
+                <h5><%= link_to book.title, book_path(book) %></h5>
+                <div class="price">$<%= book.price %></div>
+            </div>
+            <% end %>
+        </div>
+        <%= paginate @books %>
+        <% end %>
+    </div>
+    <div class="col-md-3 text-right">
+      <%= render 'categories' %>
+    </div>
+</div>

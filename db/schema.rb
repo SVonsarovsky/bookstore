@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141219163346) do
+ActiveRecord::Schema.define(version: 20150123140746) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -31,9 +31,78 @@ ActiveRecord::Schema.define(version: 20141219163346) do
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true
   add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
 
+  create_table "authors", force: true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "authors_books", id: false, force: true do |t|
+    t.integer "author_id"
+    t.integer "book_id"
+  end
+
+  add_index "authors_books", ["author_id", "book_id"], name: "index_authors_books_on_author_id_and_book_id"
+  add_index "authors_books", ["author_id"], name: "index_authors_books_on_author_id"
+  add_index "authors_books", ["book_id"], name: "index_authors_books_on_book_id"
+
+  create_table "books", force: true do |t|
+    t.string   "title"
+    t.text     "short_description"
+    t.text     "full_description"
+    t.decimal  "price",             precision: 10, scale: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "image"
+  end
+
+  create_table "books_categories", id: false, force: true do |t|
+    t.integer "book_id"
+    t.integer "category_id"
+  end
+
+  add_index "books_categories", ["book_id", "category_id"], name: "index_books_categories_on_book_id_and_category_id"
+  add_index "books_categories", ["book_id"], name: "index_books_categories_on_book_id"
+  add_index "books_categories", ["category_id"], name: "index_books_categories_on_category_id"
+
+  create_table "categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ckeditor_assets", force: true do |t|
+    t.string   "data_file_name",               null: false
+    t.string   "data_content_type"
+    t.integer  "data_file_size"
+    t.integer  "assetable_id"
+    t.string   "assetable_type",    limit: 30
+    t.string   "type",              limit: 30
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable"
+  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type"
+
+  create_table "reviews", force: true do |t|
+    t.text     "text"
+    t.integer  "rating"
+    t.integer  "user_id"
+    t.integer  "book_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "reviews", ["book_id"], name: "index_reviews_on_book_id"
+  add_index "reviews", ["user_id"], name: "index_reviews_on_user_id"
+
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
-    t.string   "password"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "encrypted_password",     default: "", null: false
@@ -45,6 +114,7 @@ ActiveRecord::Schema.define(version: 20141219163346) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "photo"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

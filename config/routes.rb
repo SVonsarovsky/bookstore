@@ -1,13 +1,18 @@
 Rails.application.routes.draw do
+  mount Ckeditor::Engine => '/ckeditor'
   devise_for :admins
-  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+  mount RailsAdmin::Engine => '/admins', as: 'rails_admin'
   devise_for :users
   devise_scope :user do
-    get '/register' => 'devise/registrations#new'
-    get '/login' => 'devise/sessions#new'
-    get '/logout' => 'devise/sessions#destroy'
+    get '/sign-up' => 'devise/registrations#new'
+    get '/sign-in' => 'devise/sessions#new'
+    get '/sign-out' => 'devise/sessions#destroy'
   end
   root 'pages#home'
+  get '/shop', to: 'books#index'
+  get '/shop/:category_id', to: 'books#index'
+  get '/book/:id', to: 'books#show', as: 'book'
+  get '/author/:id', to: 'authors#show', as: 'author'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

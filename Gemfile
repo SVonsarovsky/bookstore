@@ -47,9 +47,12 @@ gem 'cancancan'
 gem 'rails_admin'
 gem 'carrierwave'
 gem 'bootstrap-sass'
+#gem 'twitter-bootstrap-rails'
 gem 'autoprefixer-rails'
 gem 'mini_magick'
-
+gem 'ckeditor', github: 'galetahub/ckeditor'
+gem 'kaminari'
+gem 'jquery-star-rating-rails'
 
 group :development, :test do
   gem 'rspec-rails'
