@@ -3,6 +3,7 @@
 <head>
   <title>The Bookstore</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag    'custom', media: 'all' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
@@ -11,18 +12,19 @@
 <div class="container">
   <header>
     <div class="row">
-      <div class="col-md-3 logo">Bookstore</div>
+      <div class="col-md-3 logo">The Bookstore</div>
       <div class="col-md-3">
         <%= home_page? ? 'HOME' : link_to('HOME', root_path) %> |
         <%= shop_page? ? 'SHOP' : link_to('SHOP', shop_path) %>
       </div>
       <div class="col-md-3 text-center">
-        <i class="glyphicon glyphicon-shopping-cart"></i> CART: (EMPTY)
+        <i class="glyphicon glyphicon-shopping-cart"></i>
+        <%= cart_page? ? 'CART' : link_to('CART', cart_path) %>: <%= cart_details %>
       </div>
       <div class="col-md-3 text-right">
         <% if user_signed_in? %>
             <%= link_to 'Settings', edit_user_registration_path %> |
-            <a href="/orders">Orders</a> |
+            <%= orders_page? ? 'Orders' : link_to('Orders', orders_path) %> |
             <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
         <% else %>
             <%= link_to 'Sign up', sign_up_path %> |

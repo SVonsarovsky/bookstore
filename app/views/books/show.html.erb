@@ -1,22 +1,23 @@
 <h1><%= @book.title %></h1>
 <div class="book clearfix">
     <img src="<%= @book.image %>" alt="<%= @book.title %>" class="pull-left" />
-    <form class="form-inline" method="post">
-        <div class="pull-right">
-            <input type="number" class="form-control quantity" name="quantity" min="1" max="20" value="1" />
-            <input class="btn btn-default" type="submit" value="Add To Cart">
-        </div>
-        <div class="price">$ <%= @book.price %></div>
-        <p><%= @book.full_description.html_safe %></p>
-    </form>
+    <%= form_tag(cart_add_path, :method => 'post', :class => 'form-inline') do %>
+      <%= hidden_field_tag(:book_id, @book.id) %>
+      <div class="pull-right">
+        <%= number_field_tag(:quantity, 1, {:min => 1, :max => 20, :class => 'form-control quantity'}) %>
+        <%= submit_tag('Add To Cart', :class => 'btn btn-default') %>
+      </div>
+      <div class="price">$ <%= @book.price %></div>
+      <p><%= @book.full_description.html_safe %></p>
+    <% end %>
 </div>
 <div class="review-list">
     <div class="clearfix">
         <h2 class="pull-left">Reviews</h2>
         <br />
-        <a href="/review/create">Add review for this book</a>
+        <%= link_to 'Add review for this book', add_review_path(@book.id) %>
     </div>
-    <%- if @reviews.length %>
+    <%- if @reviews.length > 0 %>
       <%- @reviews.each do |review| %>
       <div class="review">
         <div class="pull-left rating">

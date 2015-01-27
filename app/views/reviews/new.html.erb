@@ -1,0 +1,32 @@
+<h1>New review for <%= link_to @book.title, book_path(@book) %></h1>
+<% if @review.errors.any? %>
+    <div class="error">
+      <div><%= pluralize(@review.errors.count, 'error') %> prohibited this review from being saved:</div>
+      <ul>
+        <% @review.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+<% end %>
+<div class="review clearfix">
+    <div class="row">
+        <div class="col-md-6">
+            <%= form_tag(create_review_path, :method => 'post') do %>
+                <div class="clearfix">
+                    <div class="pull-left">Rating&nbsp;</div>
+                    <div class="rating">
+                      <%- (Review::MIN_RATING..Review::MAX_RATING).each do |rating| %>
+                        <input name="rating" value="<%= rating %>" type="radio" class="star"<%= (rating==@review.rating ? ' checked="checked"':'').html_safe %> />
+                      <%- end %>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Text review</label>
+                    <%= text_area_tag('text', @review.text, :class => 'form-control', :rows => 4) %>
+                </div>
+                <%= submit_tag('Add review', :class => 'btn btn-default') %> &nbsp; or &nbsp; <%= link_to 'Cancel', book_path(@book) %>
+            <% end %>
+        </div>
+    </div>
+</div>

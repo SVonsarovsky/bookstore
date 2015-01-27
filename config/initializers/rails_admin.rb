@@ -31,7 +31,7 @@ RailsAdmin.config do |config|
     delete
     show_in_app
 
-    config.included_models = ['User', 'Author', 'Category', 'Book', 'Review']
+    config.included_models = ['User', 'Author', 'Category', 'Book', 'Review', 'Order']
 
     ## With an audit adapter, you can add:
     # history_index

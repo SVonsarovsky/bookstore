@@ -4,15 +4,26 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admins', as: 'rails_admin'
   devise_for :users
   devise_scope :user do
-    get '/sign-up' => 'devise/registrations#new'
-    get '/sign-in' => 'devise/sessions#new'
-    get '/sign-out' => 'devise/sessions#destroy'
+    get  '/sign-up' => 'devise/registrations#new'
+    get  '/sign-in' => 'devise/sessions#new'
+    get  '/sign-out' => 'devise/sessions#destroy'
   end
-  root 'pages#home'
-  get '/shop', to: 'books#index'
-  get '/shop/:category_id', to: 'books#index'
-  get '/book/:id', to: 'books#show', as: 'book'
-  get '/author/:id', to: 'authors#show', as: 'author'
+  root   'pages#home'
+  get    '/shop', to: 'books#index'
+  get    '/shop/:category_id', to: 'books#index'
+
+  get    '/books/:id', to: 'books#show', as: 'book'
+  get    '/books/:book_id/add-review', to: 'reviews#new', as: 'add_review'
+  post   '/books/:book_id/create-review', to: 'reviews#create', as: 'create_review'
+
+  get    '/cart', to: 'orders#cart'
+  post   '/cart/add', to: 'orders#add_item'
+  put    '/cart/update', to: 'orders#update_cart'
+  delete '/cart/remove/:item_id', to: 'orders#remove_item', as: 'cart_remove'
+  delete '/cart/empty', to: 'orders#empty_cart'
+
+  resources :orders, only: [:index, :show]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

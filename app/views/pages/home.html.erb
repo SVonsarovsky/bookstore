@@ -15,21 +15,17 @@
       <div class="carousel-caption">
         <div class="clearfix">
           <h3 class="pull-left"><%= book.title %></h3>
-          <p>by
-            <%- book.authors.each_with_index do |author, index| %>
-              <%= (index > 0 ? ', ': '') %>
-              <%= link_to author.name, author_path(author) %>
-            <%- end %>
-          </p>
+          <p>by <%= book.authors.map{|author| author.name }.join(', ') %></p>
         </div>
         <div class="clearfix">
-          <img src="<%= book.image.carousel %>" alt="<%= book.title %>" class="pull-left img-thumbnail" />
+          <%= link_to(image_tag(book.image.carousel, :alt => book.title, :class => 'pull-left img-thumbnail'), book_path(book)) %>
           <p><%= book.short_description %></p>
-          <form class="form-inline" method="post">
+          <%= form_tag(cart_add_path, :method => 'post', :class => 'form-inline') do %>
+            <%= hidden_field_tag(:book_id, book.id) %>
             <span class="price">$ <%= book.price %></span>
-            <input type="number" class="form-control quantity" name="quantity" min="1" max="20" value="1" />
-            <input class="btn btn-default" type="submit" value="Add To Cart">
-          </form>
+            <%= number_field_tag(:quantity, 1, {:min => 1, :max => 20, :class => 'form-control quantity'}) %>
+            <%= submit_tag('Add To Cart', :class => 'btn btn-default') %>
+          <% end %>
         </div>
       </div>
     </div>
