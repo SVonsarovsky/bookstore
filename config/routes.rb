@@ -8,20 +8,17 @@ Rails.application.routes.draw do
     get  '/sign-in' => 'devise/sessions#new'
     get  '/sign-out' => 'devise/sessions#destroy'
   end
+
   root   'pages#home'
   get    '/shop', to: 'books#index'
-  get    '/shop/:category_id', to: 'books#index'
+  get    '/shop/:category_id', to: 'books#index', as: 'shop_category'
+  resources :books, only: [:show] do
+    resources :reviews, only: [:new, :create]
+  end
 
-  get    '/books/:id', to: 'books#show', as: 'book'
-  get    '/books/:book_id/add-review', to: 'reviews#new', as: 'add_review'
-  post   '/books/:book_id/create-review', to: 'reviews#create', as: 'create_review'
-
-  get    '/cart', to: 'orders#cart'
-  post   '/cart/add', to: 'orders#add_item'
-  put    '/cart/update', to: 'orders#update_cart'
-  delete '/cart/remove/:item_id', to: 'orders#remove_item', as: 'cart_remove'
-  delete '/cart/empty', to: 'orders#empty_cart'
-
+  post   '/cart', to: 'carts#add_item'
+  delete '/cart/:item_id', to: 'carts#remove_item', as: 'cart_item'
+  resource  :cart, only: [:show, :update, :destroy]
   resources :orders, only: [:index, :show]
 
   # The priority is based upon order of creation: first created -> highest priority.

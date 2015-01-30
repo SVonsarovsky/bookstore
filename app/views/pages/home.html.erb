@@ -20,7 +20,7 @@
         <div class="clearfix">
           <%= link_to(image_tag(book.image.carousel, :alt => book.title, :class => 'pull-left img-thumbnail'), book_path(book)) %>
           <p><%= book.short_description %></p>
-          <%= form_tag(cart_add_path, :method => 'post', :class => 'form-inline') do %>
+          <%= form_tag(cart_path, :method => 'post', :class => 'form-inline') do %>
             <%= hidden_field_tag(:book_id, book.id) %>
             <span class="price">$ <%= book.price %></span>
             <%= number_field_tag(:quantity, 1, {:min => 1, :max => 20, :class => 'form-control quantity'}) %>

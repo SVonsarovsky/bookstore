@@ -3,7 +3,13 @@ class Order < ActiveRecord::Base
   belongs_to :user
   enum state: ['in progress', 'in queue', 'in delivery', 'delivered', 'canceled']
   validates :user, presence: true
+  validates :number, uniqueness: true
   validates :total_price, numericality: {:greater_than_or_equal_to => 0}, allow_blank: true
+
+  after_create do |order|
+    begin
+    end while !order.update(number: rand(100000000..999999999))
+  end
 
   def add_book(book, quantity)
     order = self
@@ -17,21 +23,26 @@ class Order < ActiveRecord::Base
   end
 
   def self.get_in_progress_one(user)
-    order = Order.where(:user => user, :state => 'in progress').first
-    order = Order.create(user: user, state: 'in progress') if order.nil?
-    order
+    user.orders.find_or_create_by(:state => 'in progress')
   end
 
-  def update_total_price
-    total_price = 0
-    total_items = 0
-    self.order_items.each do |order_item|
-      total_items += order_item.quantity
-      total_price += (order_item.price * order_item.quantity)
-    end
-    self.total_price = total_price
-    self.total_items = total_items
-    self.save
+  def total_price
+    #@total_price = self.order_items.sum('quantity*price') if @total_price.nil?
+    set_totals if @total_price.nil?
+    @total_price
+  end
+
+  def total_items
+    #@total_items = self.order_items.sum(:quantity) if @total_items.nil?
+    set_totals if @total_items.nil?
+    @total_items
+  end
+
+  protected
+  def set_totals
+    totals = self.order_items.select('SUM(quantity) as quantity, SUM(quantity*price) as price').first
+    @total_price = totals.price.nil? ? 0 : totals.price
+    @total_items = totals.quantity.nil? ? 0 : totals.quantity
   end
 
 end

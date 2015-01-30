@@ -11,7 +11,7 @@ class BooksController < ApplicationController
       @books = Book.
           includes(:books_categories).
           references(:books_categories).
-          where('books_categories.category_id = ' + @category_id.to_s).
+          where('books_categories.category_id = ?', @category_id).
           order(:title).page params[:page]
     else
       @category_id = 0
@@ -22,13 +22,6 @@ class BooksController < ApplicationController
   def show
     @book = Book.find(params[:id].to_i)
     @reviews = @book.reviews
-  end
-
-  private
-  def last_open_page
-    unless user_signed_in? && current_user.instance_of?(User)
-      session[:last_open_page] = request.original_fullpath
-    end
   end
 
 end

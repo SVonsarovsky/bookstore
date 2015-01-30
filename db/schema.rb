@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150123170842) do
+ActiveRecord::Schema.define(version: 20150129154051) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -102,15 +102,15 @@ ActiveRecord::Schema.define(version: 20150123170842) do
   add_index "order_items", ["order_id"], name: "index_order_items_on_order_id"
 
   create_table "orders", force: true do |t|
-    t.decimal  "total_price",  precision: 10, scale: 4, default: 0.0
-    t.integer  "total_items",                           default: 0
     t.datetime "completed_at"
-    t.integer  "state",                                 default: 0
+    t.integer  "state",        default: 0
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "number"
   end
 
+  add_index "orders", ["number"], name: "index_orders_on_number", unique: true
   add_index "orders", ["user_id"], name: "index_orders_on_user_id"
 
   create_table "reviews", force: true do |t|

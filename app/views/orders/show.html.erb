@@ -1,59 +1,25 @@
 <div class="clearfix">
-    <div class="order-back"><a href="orders.html"><< Back to orders</a></div>
-    <h1 class="pull-left">Order R987654321</h1>
-    <div class="order-status"> &nbsp; delivered</div>
+    <div class="order-back"> <%= link_to '<< Back to orders', orders_path %></div>
+    <h1 class="pull-left">Order R<%= @order.number %></h1>
+    <div class="order-status"> &nbsp; <%= order_status(@order.state) %></div>
 </div>
 <div class="order clearfix">
+<%- if @order_items.length > 0 %>
     <%= render 'order' %>
-    <!--<table class="table table-condensed">
-        <thead>
-            <tr>
-                <th colspan="2">BOOK</th>
-                <th>PRICE</th>
-                <th>QTY</th>
-                <th>TOTAL</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><img src="/i/book-small.png" width="75" height="60" alt="" /></td>
-            <td>
-                <div>The ruby programming language 1</div>
-                <p>
-                    The Ruby Programming Language is the authoritative guide to Ruby and provides comprehensive coverage of versions 1.8 and 1.9 of the language. It was written (and illustrated!) by an all-star team:
-                    David Flanagan, bestselling author of programming language "bibles" (including JavaScript: The Definitive Guide and Java in a Nutshell) and committer to the Ruby Subversion repository.
-                </p>
-            </td>
-            <td class="price">$15.99</td>
-            <td class="quantity">10</td>
-            <td class="price">$159.90</td>
-        </tr>
-        <tr>
-            <td><img src="/i/book-small.png" width="75" height="60" alt="" /></td>
-            <td>
-                <div>The ruby programming language 1</div>
-                <p>
-                    The Ruby Programming Language is the authoritative guide to Ruby and provides comprehensive coverage of versions 1.8 and 1.9 of the language. It was written (and illustrated!) by an all-star team:
-                    David Flanagan, bestselling author of programming language "bibles" (including JavaScript: The Definitive Guide and Java in a Nutshell) and committer to the Ruby Subversion repository.
-                </p>
-            </td>
-            <td class="price">$15.99</td>
-            <td class="quantity">1</td>
-            <td class="price">$15.99</td>
-        </tr>
-        </tbody>
-    </table>-->
     <div class="clearfix">
         <div class="pull-right">
             <div class="subtotal clearfix">
-                <div class="pull-right"><strong>$123.99</strong><br /><strong>$5.99</strong></div>
+                <div class="pull-right"><strong>$<%= @subtotal %></strong><br /><strong>$<%= @shipping %></strong></div>
                 <div class="pull-right">SUBTOTAL: &nbsp; <br />SHIPPING: &nbsp; </div>
             </div>
         </div>
     </div>
     <div class="clearfix total">
         <div class="pull-right subtotal">
-            ORDER TOTAL: &nbsp; <strong>$129.98</strong>
+            ORDER TOTAL: &nbsp; <strong>$<%= @order_total %></strong>
         </div>
     </div>
+<%- else %>
+    <p>Order is empty&hellip;</p>
+<%- end %>
 </div>
