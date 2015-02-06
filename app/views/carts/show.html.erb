@@ -33,7 +33,7 @@
         <div class="form-inline pull-right">
             <input type="text" class="form-control" placeholder="Coupon code" size="12">
             <%= submit_tag('UPDATE', :class => 'btn btn-default') %>
-            <input class="btn btn-default" type="button" value="CHECKOUT">
+            <%= link_to('CHECKOUT', cart_checkout_path, :class => 'btn btn-default') %>
         </div>
         <%= link_to('EMPTY CART', cart_path, {:class => 'btn btn-default', :method => 'delete'}) %>
         <%= link_to('CONTINUE SHOPPING', shop_path, {:class => 'btn btn-default'}) %>

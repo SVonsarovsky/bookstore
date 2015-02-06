@@ -1,0 +1,44 @@
+<div class="checkout clearfix">
+    <h1>Order <%= @order.display_number %></h1>
+    <div class="row">
+        <div class="col-md-3">
+            <h2>Shipping Address</h2>
+            <%= render 'address/details', address: @shipping_address %>
+        </div>
+        <div class="col-md-3">
+            <h2>Billing Address</h2>
+            <%= render 'address/details', address: @billing_address %>
+        </div>
+        <div class="col-md-3">
+            <h2>Shipping method</h2>
+            <div class="details">
+              <%= @order.shipping_method.name %>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h2>Payment information</h2>
+            <div class="details">
+              <%= @credit_card.display_number %><br />
+              <%= @credit_card.expiration_month %>/<%= @credit_card.expiration_year %>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="order clearfix">
+    <%= render 'orders/order' %>
+    <div class="clearfix">
+        <div class="pull-right">
+            <div class="subtotal clearfix">
+                <div class="pull-right"><strong>$<%= @order.total_price %></strong><br /><strong>$<%= @order.shipping_cost %></strong></div>
+                <div class="pull-right">SUBTOTAL: &nbsp; <br />SHIPPING: &nbsp; </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix total">
+        <div class="pull-right subtotal">
+            ORDER TOTAL: &nbsp; <strong>$<%= (@order.total_price+@order.shipping_cost) %></strong>
+        </div>
+    </div>
+    <%= link_to('GO BACK TO STORE', shop_path, {:class => 'btn btn-default'}) %>
+</div>
+

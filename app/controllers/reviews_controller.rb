@@ -2,7 +2,7 @@ class ReviewsController < ApplicationController
   before_action :require_login
 
   def new
-    @book = Book.find(params[:book_id].to_i)
+    @book = Book.find(params[:book_id])
     @review = Review.new(book: @book, user: current_user)
   end
 

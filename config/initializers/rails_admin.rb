@@ -27,17 +27,27 @@ RailsAdmin.config do |config|
     export
     bulk_delete
     show
-    edit
+    edit do
+      except ['Order']
+    end
     delete
-    show_in_app
+    show_in_app do
+      except ['Order']
+    end
+    state do
+      visible do
+        bindings[:abstract_model].model.to_s == 'Order'
+      end
+    end
 
-    config.included_models = ['User', 'Author', 'Category', 'Book', 'Review', 'Order']
+    config.included_models = %w(Country ShippingMethod User Author Category Book Review Order)
 
     ## With an audit adapter, you can add:
     # history_index
     # history_show
 
     config.model User do
+      label 'Customer'
       list do
         field :id
         field :email
@@ -148,6 +158,36 @@ RailsAdmin.config do |config|
         field :user
         field :rating
         field :text
+      end
+    end
+    config.model Order do
+      list do
+        field :id
+        field :display_number do
+          label 'Number'
+        end
+        field :totals do
+          label 'Total price (items)'
+        end
+        field :state, :state
+        field :user
+        field :completed_at
+      end
+      edit do
+        field :state, :state
+      end
+      show do
+        field :id
+        field :display_number do
+          label 'Number'
+        end
+        field :totals do
+          label 'Total price (items)'
+        end
+        field :state, :state
+        field :user
+        field :completed_at
+        field :order_items
       end
     end
 

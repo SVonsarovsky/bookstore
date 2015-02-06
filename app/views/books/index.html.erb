@@ -8,7 +8,7 @@
           </div>
           <h1>Shop &mdash; <%= @category.name %></h1>
       <%- end %>
-        <% if @books.length > 0 %>
+        <% unless @books.blank? %>
         <div class="row shop-list">
             <% @books.each do |book| %>
             <div class="col-md-4">

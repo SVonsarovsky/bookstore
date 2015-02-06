@@ -1,0 +1,7 @@
+<%- unless @errors[area.to_sym].nil? %>
+    <ul>
+      <%- @errors[area.to_sym].each do |message| %>
+          <li><%= message %></li>
+      <%- end %>
+    </ul>
+<%- end %>

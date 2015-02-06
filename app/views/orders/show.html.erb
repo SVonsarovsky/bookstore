@@ -1,7 +1,7 @@
 <div class="clearfix">
     <div class="order-back"> <%= link_to '<< Back to orders', orders_path %></div>
-    <h1 class="pull-left">Order R<%= @order.number %></h1>
-    <div class="order-status"> &nbsp; <%= order_status(@order.state) %></div>
+    <h1 class="pull-left">Order <%= @order.display_number %></h1>
+    <div class="order-status"> &nbsp; <%= @order.status %></div>
 </div>
 <div class="order clearfix">
 <%- if @order_items.length > 0 %>
@@ -9,7 +9,7 @@
     <div class="clearfix">
         <div class="pull-right">
             <div class="subtotal clearfix">
-                <div class="pull-right"><strong>$<%= @subtotal %></strong><br /><strong>$<%= @shipping %></strong></div>
+                <div class="pull-right"><strong>$<%= @order.total_price %></strong><br /><strong>$<%= @order.shipping_cost %></strong></div>
                 <div class="pull-right">SUBTOTAL: &nbsp; <br />SHIPPING: &nbsp; </div>
             </div>
         </div>

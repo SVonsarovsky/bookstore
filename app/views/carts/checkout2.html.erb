@@ -1,0 +1,52 @@
+    <!-- checkout shipping page -->
+    <div class="checkout clearfix">
+        <div class="stages">
+          <%= link_to('ADDRESS', cart_checkout_path) %> &nbsp; <span>SHIPPING</span> &nbsp; PAYMENT &nbsp; CONFIRM &nbsp; COMPLETE
+        </div>
+        <h1>Checkout</h1>
+        <form method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>SHIPPING METHOD</h2>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="shipping" value="1" checked />
+                        UPS Ground + $5.00
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="shipping" value="2">
+                        UPS Two Day + $10.00
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="shipping" value="3" />
+                        UPS One Day + $15.00
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                &nbsp;
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <h2>ORDER SUMMARY</h2>
+                    <div class="summary-price">
+                        $47.50<br />$5.00<br />$47.50
+                    </div>
+                    <div class="summary-title">
+                        <nobr>ITEMS TOTAL:</nobr><br />
+                        <nobr>SHIPPING:</nobr><br />
+                        <nobr>ORDER TOTAL:</nobr>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-default">SAVE AND CONTINUE</button>
+        </div>
+        </form>
+    </div>
+    <!-- /. checkout shipping page -->

@@ -17,7 +17,7 @@
         <br />
         <%= link_to 'Add review for this book', new_book_review_path(@book.id) %>
     </div>
-    <%- if @reviews.length > 0 %>
+    <%- unless @reviews.blank? %>
       <%- @reviews.each do |review| %>
       <div class="review">
         <div class="pull-left rating">
@@ -29,8 +29,8 @@
         <div class="author">by <%= mail_to(review.user.email, review.user.name) %></div>
         <p><%= review.text %></p>
       </div>
-    <%- end %>
+      <%- end %>
     <%- else %>
-    <p>No reviews yet&hellip;</p>
+      <p>No reviews yet&hellip;</p>
     <%- end %>
 </div>

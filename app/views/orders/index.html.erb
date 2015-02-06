@@ -5,7 +5,7 @@
     <div class="order">
         <%= render 'order' %>
         <div class="clearfix">
-            <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong>$<%= @subtotal %></strong></div>
+            <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong>$<%= @order.total_price %></strong></div>
             <%= link_to 'GO TO CART', cart_path, class: 'btn btn-default' %>
         </div>
     </div>
@@ -13,7 +13,7 @@
       <p>Order is empty&hellip; <%= link_to 'Get started shopping!', shop_path %></p>
     <%- end %>
     <div>&nbsp;</div>
-
+<%- unless (@orders.nil?) %>
     <%- previous_state = '' %>
     <%- @orders.each do |order| %>
       <%- if previous_state != order.state %>
@@ -21,7 +21,7 @@
     </tbody>
     </table>
         <%- end %>
-    <h2><%= order_status(order.state).upcase %></h2>
+    <h2><%= order.status.upcase %></h2>
     <table class="table table-condensed no-borders">
       <thead>
         <tr>
@@ -34,13 +34,14 @@
     <tbody>
       <%- end %>
       <tr>
-        <td>R<%= order.number %></td>
+        <td><%= order.display_number %></td>
         <td><%= date_format(order.completed_at) %></td>
-        <td>$<%= order.total_price %></td>
+        <td>$<%= (order.total_price+order.shipping_cost) %></td>
         <td><%= link_to 'View', order_path(order) %></td>
       </tr>
     <%- previous_state = order.state %>
     <%- end %>
     </tbody>
     </table>
+<%- end %>
 </div>

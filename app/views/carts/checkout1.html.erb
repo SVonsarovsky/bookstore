@@ -1,0 +1,39 @@
+<div class="checkout clearfix">
+    <div class="stages">
+        <span>ADDRESS</span> &nbsp; SHIPPING &nbsp; PAYMENT &nbsp; CONFIRM &nbsp; COMPLETE
+    </div>
+    <h1>Checkout</h1>
+    <%= form_tag(cart_path, :method => 'put') do %>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>BILLING ADDRESS</h2>
+            <%= render 'customers/errors', area: 'billing_address' %>
+            <%= render 'address/form', type: 'billing', address: @billing_address %>
+        </div>
+        <div class="col-md-4">
+            <h2>SHIPPING ADDRESS</h2>
+            <div id="shipping_address">
+                <%= render 'customers/errors', area: 'shipping_address' %>
+                <%= render 'address/form', type: 'shipping', address: @shipping_address %>
+            </div>
+            <div class="checkbox">
+                <label><%= check_box_tag('use_billing_address') %> Use billing address</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="pull-right">
+                <h2>ORDER SUMMARY</h2>
+                <div class="summary-price">
+                    $<%= @order.total_price %><br />$<%= @order.total_price %>
+                </div>
+                <div class="summary-title">
+                    <nobr>ITEMS TOTAL:</nobr><br /><nobr>ORDER TOTAL:</nobr>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <%= submit_tag('SAVE AND CONTINUE', :class => 'btn btn-default', :name => 'address') %>
+    </div>
+  <% end %>
+</div>

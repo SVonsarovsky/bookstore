@@ -1,0 +1,76 @@
+    <!-- checkout payment page -->
+    <div class="checkout clearfix">
+        <div class="stages">
+            <a href="/checkout1.html">ADDRESS</a> &nbsp; <a href="/checkout2.html">SHIPPING</a> &nbsp; <span>PAYMENT</span> &nbsp; CONFIRM &nbsp; COMPLETE
+        </div>
+        <h1>Checkout</h1>
+        <form method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>CARD DETAILS</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="card_number" placeholder="Card Number">
+                </div>
+                <div class="form-group">
+                    Expiration date:
+                    <div class="month-year">
+                        <div class="input-group">
+                            <div class="input-group-addon">Month</div>
+                            <select class="form-control month">
+                                <option value="1">01</option>
+                                <option value="2">02</option>
+                                <option value="3">03</option>
+                                <option value="4">04</option>
+                                <option value="5">05</option>
+                                <option value="6">06</option>
+                                <option value="7">07</option>
+                                <option value="8">08</option>
+                                <option value="9">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-addon">Year</div>
+                            <select class="form-control year">
+                                <option value="2015">2015</option>
+                                <option value="2016">2016</option>
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group card-code">
+                        <div class="input-group-addon">Card code:</div>
+                        <input type="text" class="form-control" id="card_code" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                &nbsp;
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <h2>ORDER SUMMARY</h2>
+                    <div class="summary-price">
+                        $47.50<br />$5.00<br />$47.50
+                    </div>
+                    <div class="summary-title">
+                        <nobr>ITEMS TOTAL:</nobr><br />
+                        <nobr>SHIPPING:</nobr><br />
+                        <nobr>ORDER TOTAL:</nobr>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-default">SAVE AND CONTINUE</button>
+        </div>
+        </form>
+    </div>
+    <!-- /. checkout payment page -->

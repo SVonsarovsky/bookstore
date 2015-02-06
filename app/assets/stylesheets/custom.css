@@ -1,6 +1,3 @@
-div.pages-links {
-    text-align: center !important;
-}
 .carousel-inner .item {
     background: #fff;    
     height: 300px !important;
@@ -173,7 +170,6 @@ h1 {
 }
 .cart table td.remove a {
     color: #f00;
-    text-decoration: none;
 }
 .order table,
 .cart table {
@@ -213,10 +209,12 @@ h1 {
 .settings form {
     margin-top: 20px;
 }
-.settings .form-control {
+.settings .form-control,
+.checkout .form-control {
     width: 250px !important;
 }
-.settings select.form-control {
+.settings select.form-control,
+.checkout select.form-control {
     width: 175px !important;
 }
 .settings div:first-child {
@@ -224,4 +222,60 @@ h1 {
 }
 .settings .checkbox {
     margin-left: 20px;
+}
+
+.checkout .stages {
+    line-height: 28px;
+    float: right;
+    font-size: 18px;
+    margin-top: 25px;
+}
+.checkout .stages span {
+    border-bottom: 1px solid #000;
+}
+.checkout h2 {
+    font-size: 18px;
+    /*text-transform: uppercase;*/
+    border-bottom: 10px solid #fff;
+}
+.checkout .summary-price {
+    margin-left: 8px;
+    float: right;
+}
+.checkout .summary-title {
+    text-align: right;
+}
+.checkout button {
+    margin-top: 10px;
+}
+.checkout select.month {
+    width: 48px !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+}
+.checkout select.year {
+    width: 80px !important;
+}
+.checkout .month-year .input-group:first-child {
+    width: 116px;
+    float: left;
+}
+.checkout .card-code {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.checkout .card-code .form-control {
+    width: 154px !important;
+}
+.checkout div.edit {
+    float: right;
+    margin-top: 20px;
+}
+.checkout .details {
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+
+.alert_message {
+    display: none !important;
 }

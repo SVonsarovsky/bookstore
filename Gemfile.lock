@@ -9,6 +9,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    aasm (4.0.8)
     actionmailer (4.1.8)
       actionpack (= 4.1.8)
       actionview (= 4.1.8)
@@ -167,6 +168,9 @@ GEM
       remotipart (~> 1.0)
       safe_yaml (~> 1.0)
       sass-rails (~> 4.0)
+    rails_admin_aasm (0.0.3)
+      aasm
+      rails_admin
     railties (4.1.8)
       actionpack (= 4.1.8)
       activesupport (= 4.1.8)
@@ -251,6 +255,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aasm
   autoprefixer-rails
   bootstrap-sass
   cancancan
@@ -271,6 +276,7 @@ DEPENDENCIES
   omniauth-facebook
   rails (= 4.1.8)
   rails_admin
+  rails_admin_aasm
   rspec-activemodel-mocks
   rspec-rails
   rspec-xml

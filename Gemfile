@@ -53,6 +53,8 @@ gem 'mini_magick'
 gem 'ckeditor', github: 'galetahub/ckeditor'
 gem 'kaminari'
 gem 'jquery-star-rating-rails'
+gem 'aasm'
+gem 'rails_admin_aasm'
 
 group :development, :test do
   gem 'rspec-rails'

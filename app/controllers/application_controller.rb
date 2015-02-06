@@ -62,4 +62,10 @@ class ApplicationController < ActionController::Base
       redirect_to sign_in_path
     end
   end
+
+  def address_params(type = 'billing')
+    params.require((type+'_address').to_sym).
+        permit(:first_name, :last_name, :address, :city, :country_id, :zip_code, :phone)
+  end
+
 end

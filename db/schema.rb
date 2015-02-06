@@ -11,7 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150129154051) do
+ActiveRecord::Schema.define(version: 20150204104724) do
+
+  create_table "addresses", force: true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "address"
+    t.string   "zip_code"
+    t.string   "city"
+    t.string   "phone"
+    t.integer  "country_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
+  add_index "addresses", ["country_id"], name: "index_addresses_on_country_id"
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -89,6 +104,24 @@ ActiveRecord::Schema.define(version: 20150129154051) do
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable"
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type"
 
+  create_table "countries", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "credit_cards", force: true do |t|
+    t.string   "number"
+    t.integer  "code"
+    t.integer  "expiration_month"
+    t.integer  "expiration_year"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "credit_cards", ["user_id"], name: "index_credit_cards_on_user_id"
+
   create_table "order_items", force: true do |t|
     t.decimal  "price",      precision: 10, scale: 4, default: 0.0
     t.integer  "quantity"
@@ -103,11 +136,16 @@ ActiveRecord::Schema.define(version: 20150129154051) do
 
   create_table "orders", force: true do |t|
     t.datetime "completed_at"
-    t.integer  "state",        default: 0
+    t.integer  "state",                                        default: 0
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "number"
+    t.integer  "billing_address_id"
+    t.integer  "shipping_address_id"
+    t.integer  "shipping_method_id"
+    t.decimal  "shipping_cost",       precision: 10, scale: 4, default: 0.0
+    t.integer  "credit_card_id"
   end
 
   add_index "orders", ["number"], name: "index_orders_on_number", unique: true
@@ -125,6 +163,14 @@ ActiveRecord::Schema.define(version: 20150129154051) do
   add_index "reviews", ["book_id"], name: "index_reviews_on_book_id"
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id"
 
+  create_table "shipping_methods", force: true do |t|
+    t.string   "name"
+    t.decimal  "cost",       precision: 10, scale: 4
+    t.integer  "state",                               default: 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.datetime "created_at"
@@ -139,6 +185,8 @@ ActiveRecord::Schema.define(version: 20150129154051) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.string   "photo"
+    t.integer  "billing_address_id"
+    t.integer  "shipping_address_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
