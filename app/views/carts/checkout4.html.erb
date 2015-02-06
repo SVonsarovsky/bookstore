@@ -26,7 +26,7 @@
             <h2>Payment information</h2>
             <div class="details">
                 <%= @credit_card.display_number %><br />
-                <%= @credit_card.expiration_month %>/<%= @credit_card.expiration_year %>
+                <%= @credit_card.display_month %>/<%= @credit_card.expiration_year %>
             </div>
         </div>
     </div>
@@ -47,6 +47,6 @@
         </div>
     </div>
     <%= form_tag(cart_path, :method => 'put') do %>
-        <%= submit_tag('PLACE ORDER', :class => 'btn btn-default', :name => 'confirm') %>
+        <%= button_tag('PLACE ORDER', :class => 'btn btn-default', :type => 'submit', :name => 'confirm') %>
     <% end %>
 </div>

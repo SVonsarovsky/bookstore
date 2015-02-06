@@ -33,7 +33,10 @@
         </div>
     </div>
     <div>
-        <%= submit_tag('SAVE AND CONTINUE', :class => 'btn btn-default', :name => 'address') %>
+        <%= button_tag('SAVE AND CONTINUE', :class => 'btn btn-default', :type => 'submit', :name => 'address') %>
+        <%- unless @order.billing_address_id.nil? || @order.shipping_address_id.nil? %>
+            <%= link_to('CONTINUE', cart_checkout_path(2), {:class => 'btn btn-default checkout'}) %>
+        <%- end %>
     </div>
-  <% end %>
+    <% end %>
 </div>

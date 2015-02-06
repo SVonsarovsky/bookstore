@@ -279,3 +279,6 @@ h1 {
 .alert_message {
     display: none !important;
 }
+a.checkout {
+    margin-top: 10px;
+}

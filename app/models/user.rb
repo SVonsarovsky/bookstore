@@ -13,7 +13,6 @@ class User < ActiveRecord::Base
 
   belongs_to :billing_address, class_name: 'Address'
   belongs_to :shipping_address, class_name: 'Address'
-  #validates :billing_address, :shipping_address, presence: true
 
   def name
     email.split('@').first

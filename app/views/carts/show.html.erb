@@ -31,7 +31,7 @@
             <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong>$<%= @subtotal %></strong></div>
         </div>
         <div class="form-inline pull-right">
-            <input type="text" class="form-control" placeholder="Coupon code" size="12">
+            <!--<input type="text" class="form-control" placeholder="Coupon code" size="12">-->
             <%= submit_tag('UPDATE', :class => 'btn btn-default') %>
             <%= link_to('CHECKOUT', cart_checkout_path, :class => 'btn btn-default') %>
         </div>
@@ -39,6 +39,6 @@
         <%= link_to('CONTINUE SHOPPING', shop_path, {:class => 'btn btn-default'}) %>
         <%- end %>
     <%- else %>
-        <p>Shopping cart is empty... <%= link_to 'Get started shopping!', shop_path %></p>
+        <p>Shopping cart is empty&hellip; <%= link_to 'Get started shopping!', shop_path %></p>
     <%- end %>
 </div>

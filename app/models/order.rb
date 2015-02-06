@@ -8,7 +8,6 @@ class Order < ActiveRecord::Base
   belongs_to :billing_address, class_name: 'Address'
   belongs_to :shipping_address, class_name: 'Address'
 
-  #validates :user, :billing_address, :shipping_address, presence: true
   validates :number, uniqueness: true
   validates :shipping_cost, numericality: {:greater_than_or_equal_to => 0}, allow_blank: true
 
@@ -54,7 +53,8 @@ class Order < ActiveRecord::Base
     type_address_index = (type+'_address').to_sym
     type_address_value = self.send(type_address_index)
     if type_address_value.nil? || self.billing_address_id == self.shipping_address_id || self.user.orders.
-        where('billing_address_id = :addr_id OR shipping_address_id = :addr_id', addr_id: type_address_value.id).any?
+        where('id != :order_id AND (billing_address_id = :addr_id OR shipping_address_id = :addr_id)',
+              order_id: self.id, addr_id: type_address_value.id).any?
       type_address_value = Address.find_or_create_by(type_address_params)
       if type_address_value.invalid?
         type_address_value.errors.full_messages.each {|error| self.errors[:base] << error }
@@ -64,6 +64,22 @@ class Order < ActiveRecord::Base
     else
       result = type_address_value.update(type_address_params)
       type_address_value.errors.full_messages.each {|error| self.errors[:base] << error } unless result
+      return result
+    end
+  end
+
+  def save_credit_card(credit_card_params = {})
+    credit_card = self.credit_card
+    if credit_card.nil? || self.user.orders.where(credit_card: credit_card).any?
+      credit_card = CreditCard.find_or_create_by(credit_card_params)
+      if credit_card.invalid?
+        credit_card.errors.full_messages.each {|error| self.errors[:base] << error }
+        return false
+      end
+      self.update(:credit_card => credit_card)
+    else
+      result = credit_card.update(credit_card_params)
+      credit_card.errors.full_messages.each {|error| self.errors[:base] << error } unless result
       return result
     end
   end

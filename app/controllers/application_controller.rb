@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
     resource.to_s == 'admin' ? rails_admin_path : root_path
   end
 
-  protected
+  private
   def layout_by_resource
     rails_admin? ? 'rails_admin' : 'application'
   end
@@ -66,6 +66,10 @@ class ApplicationController < ActionController::Base
   def address_params(type = 'billing')
     params.require((type+'_address').to_sym).
         permit(:first_name, :last_name, :address, :city, :country_id, :zip_code, :phone)
+  end
+
+  def set_countries
+    @countries = Country.order(:name).map{|country| [country.name, country.id]}
   end
 
 end

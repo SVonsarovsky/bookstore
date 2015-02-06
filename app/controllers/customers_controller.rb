@@ -5,7 +5,7 @@ class CustomersController < ApplicationController
   def edit
     @billing_address = @customer.billing_address.nil? ? Address.new : @customer.billing_address
     @shipping_address = @customer.shipping_address.nil? ? Address.new : @customer.shipping_address
-    @countries = Country.order(:name).map{|country| [country.name, country.id]}
+    set_countries
   end
 
   # PATCH/PUT /customer

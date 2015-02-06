@@ -16,9 +16,9 @@
                 <div class="clearfix">
                     <div class="pull-left">Rating&nbsp;</div>
                     <div class="rating">
-                      <%- (Review::MIN_RATING..Review::MAX_RATING).each do |rating| %>
+                        <%- (Review::MIN_RATING..Review::MAX_RATING).each do |rating| %>
                         <%= radio_button_tag('_review[rating]', rating, rating==@review.rating, class: 'star') %>
-                      <%- end %>
+                        <%- end %>
                     </div>
                 </div>
                 <div class="form-group">
