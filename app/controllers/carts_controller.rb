@@ -9,7 +9,7 @@ class CartsController < ApplicationController
 
   # GET /cart
   def show
-    @cart_items = @order.order_items.includes(:book).references(:book)
+    @cart_items = @order.books
     @subtotal = @order.total_price
   end
 
@@ -92,25 +92,22 @@ class CartsController < ApplicationController
   end
 
   def save_address(type, address_params)
-    if type == 'billing'
-      saving_result = @order.save_address(type, address_params)
-    else
-      if params.has_key?(:use_billing_address)
-        @order.send(type+'_address_id=', @order.billing_address_id)
-        saving_result = @order.save
-      else
-        saving_result = @order.save_address(type, address_params)
-      end
+    if type == 'shipping' && params.has_key?(:use_billing_address)
+      @order.send(type+'_address_id=', @order.billing_address_id)
+      saving_result = @order.save
+      set_area_errors "#{type}_address" unless saving_result
+      return saving_result
     end
-    if saving_result
-      @customer.send(type+'_address_id=', @order.send("#{type}_address_id"))
-      saving_result = @customer.save
-      unless saving_result
-        @errors["#{type}_address".to_sym] = @customer.errors.full_messages.uniq
-      end
-    else
-      @errors["#{type}_address".to_sym] = @order.errors.full_messages.uniq
+
+    saving_result = @customer.save_address(type, address_params)
+    unless saving_result
+      set_area_errors "#{type}_address", 'customer'
+      return saving_result
     end
+
+    @order.send(type+'_address_id=', @customer.send("#{type}_address_id"))
+    saving_result = @order.save
+    set_area_errors "#{type}_address" unless saving_result
     saving_result
   end
 
@@ -133,7 +130,7 @@ class CartsController < ApplicationController
     if @order.update(params.permit(:shipping_method_id, :shipping_cost))
       redirect_to cart_checkout_path(3), :notice => 'Shipping method was successfully saved.'
     else
-      @errors[:shipping_method] = @order.errors.full_messages.uniq
+      set_area_errors 'shipping_method'
       checkout2
     end
   end
@@ -154,7 +151,7 @@ class CartsController < ApplicationController
     if @order.save_credit_card(credit_card_params.merge(user: @customer))
       redirect_to cart_checkout_path(4), :notice => 'Payment data was successfully saved.'
     else
-      @errors[:credit_card] = @order.errors.full_messages.uniq
+      set_area_errors 'credit_card'
       @credit_card = CreditCard.new(credit_card_params)
       render :checkout3
     end
@@ -170,7 +167,7 @@ class CartsController < ApplicationController
   end
 
   def place_order
-    @order.update(completed_at: Time.now)
+    @order.update(completed_at: Time.zone.now)
     @order.checkout!
     redirect_to cart_checkout_path(5)
   end
@@ -189,7 +186,7 @@ class CartsController < ApplicationController
   end
 
   def set_order_details
-    @order_items = @order.order_items.includes(:book).references(:book)
+    @order_items = @order.books
     @credit_card = @order.credit_card
     @billing_address = @order.billing_address
     @shipping_address = @order.shipping_address
@@ -208,5 +205,9 @@ class CartsController < ApplicationController
 
   def credit_card_params
     params.require(:credit_card).permit(:number, :expiration_month, :expiration_year, :code)
+  end
+
+  def set_area_errors(area, obj = 'order')
+    @errors[area.to_sym] = instance_variable_get("@#{obj}").errors.full_messages.uniq
   end
 end

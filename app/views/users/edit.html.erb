@@ -3,17 +3,17 @@
     <div class="row">
         <div class="col-md-6">
             <h2>BILLING ADDRESS</h2>
-            <%= form_tag(customer_path, :method => 'put') do %>
-                <%= render 'errors', area: 'billing_address' %>
-                <%= render 'address/form', type: 'billing', address: @billing_address %>
+            <%= form_tag(user_path, :method => 'put') do %>
+                <%= render 'shared/errors', area: 'billing_address' %>
+                <%= render 'shared/addr_form', type: 'billing', address: @billing_address %>
                 <%= submit_tag('SAVE', :class => 'btn btn-default') %>
             <% end %>
         </div>
         <div class="col-md-6">
             <h2>SHIPPING ADDRESS</h2>
-            <%= form_tag(customer_path, :method => 'put') do %>
-                <%= render 'errors', area: 'shipping_address' %>
-                <%= render 'address/form', type: 'shipping', address: @shipping_address %>
+            <%= form_tag(user_path, :method => 'put') do %>
+                <%= render 'shared/errors', area: 'shipping_address' %>
+                <%= render 'shared/addr_form', type: 'shipping', address: @shipping_address %>
                 <%= submit_tag('SAVE', :class => 'btn btn-default') %>
             <% end %>
         </div>
@@ -21,18 +21,18 @@
     <div class="row">
         <div class="col-md-6">
             <h2>E-MAIL</h2>
-            <%= form_tag(customer_path, :method => 'put') do %>
-                <%= render 'errors', area: 'email' %>
+            <%= form_tag(user_path, :method => 'put') do %>
+                <%= render 'shared/errors', area: 'email' %>
                 <div class="form-group">
-                    <%= email_field_tag('user[email]', @customer.email, :class => 'form-control', :placeholder => 'Enter email')%>
+                    <%= email_field_tag('user[email]', @user.email, :class => 'form-control', :placeholder => 'Enter email')%>
                 </div>
                 <%= submit_tag('SAVE', :class => 'btn btn-default') %>
             <% end %>
         </div>
         <div class="col-md-6">
             <h2>PASSWORD</h2>
-            <%= form_tag(customer_path, :method => 'put', :autocomplete => 'off') do %>
-                <%= render 'errors', area: 'password' %>
+            <%= form_tag(user_path, :method => 'put', :autocomplete => 'off') do %>
+                <%= render 'shared/errors', area: 'password' %>
                 <div class="form-group">
                     <%= label_tag('user[current_password]', 'Current password')%>
                     <%= password_field_tag('user[current_password]', '', :class => 'form-control', :placeholder => 'Type current password') %>
@@ -52,7 +52,7 @@
     <div class="row">
         <div class="col-md-12">
             <h2>REMOVE ACCOUNT</h2>
-            <%= form_tag(customer_path, :method => 'delete', :class => 'form-inline') do %>
+            <%= form_tag(user_path, :method => 'delete', :class => 'form-inline') do %>
                 <div class="alert_message">You must confirm that you understand the consequences of your action!</div>
                 <%= submit_tag('REMOVE ACCOUNT', :class => 'btn btn-default', :id => 'remove_account') %>
                 <div class="checkbox">

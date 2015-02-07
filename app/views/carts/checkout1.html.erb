@@ -7,17 +7,17 @@
     <div class="row">
         <div class="col-md-4">
             <h2>BILLING ADDRESS</h2>
-            <%= render 'customers/errors', area: 'billing_address' %>
-            <%= render 'address/form', type: 'billing', address: @billing_address %>
+            <%= render 'shared/errors', area: 'billing_address' %>
+            <%= render 'shared/addr_form', type: 'billing', address: @billing_address %>
         </div>
         <div class="col-md-4">
             <h2>SHIPPING ADDRESS</h2>
             <div id="shipping_address">
-                <%= render 'customers/errors', area: 'shipping_address' %>
-                <%= render 'address/form', type: 'shipping', address: @shipping_address %>
+                <%= render 'shared/errors', area: 'shipping_address' %>
+                <%= render 'shared/addr_form', type: 'shipping', address: @shipping_address %>
             </div>
             <div class="checkbox">
-                <label><%= check_box_tag('use_billing_address') %> Use billing address</label>
+                <label><%= check_box_tag('use_billing_address', 1, (!@order.billing_address_id.nil? && @order.billing_address_id==@order.shipping_address_id)) %> Use billing address</label>
             </div>
         </div>
         <div class="col-md-4">

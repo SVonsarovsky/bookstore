@@ -1,16 +1,17 @@
 class Book < ActiveRecord::Base
+  BESTSELLERS_COUNT = 5
+
   has_and_belongs_to_many :categories
   has_and_belongs_to_many :authors
   has_many :reviews, dependent: :destroy
   has_many :order_items
   validates :categories, :authors, presence: true
-  validates :title, :price, :short_description, presence: true
+  validates :title, :price, :short_description, :full_description, presence: true
 
-  #accepts_nested_attributes_for :authors, :allow_destroy => true
   mount_uploader :image, ImageUploader
-  paginates_per 1
+  paginates_per 9
 
   def self.bestsellers
-    Book.all
+    Book.order('sold_count DESC').limit(self::BESTSELLERS_COUNT)
   end
 end

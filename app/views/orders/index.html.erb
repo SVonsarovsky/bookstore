@@ -3,7 +3,7 @@
     <h2>In progress</h2>
     <%- if @order_items.length > 0 %>
     <div class="order">
-        <%= render 'order' %>
+        <%= render 'shared/order' %>
         <div class="clearfix">
             <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong>$<%= @order.total_price %></strong></div>
             <%= link_to 'GO TO CART', cart_path, class: 'btn btn-default' %>

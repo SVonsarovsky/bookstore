@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150204104724) do
+ActiveRecord::Schema.define(version: 20150207165711) do
 
   create_table "addresses", force: true do |t|
     t.string   "first_name"
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20150204104724) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "image"
+    t.integer  "sold_count",                                 default: 0
   end
 
   create_table "books_categories", id: false, force: true do |t|

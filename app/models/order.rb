@@ -11,6 +11,7 @@ class Order < ActiveRecord::Base
   validates :number, uniqueness: true
   validates :shipping_cost, numericality: {:greater_than_or_equal_to => 0}, allow_blank: true
 
+  scope :not_in_progress, -> { where.not(state: 'in_progress') }
   enum state: ['in_progress', 'in_queue', 'in_delivery', 'delivered', 'canceled']
   aasm :column => :state, :enum => true do
     state :in_progress, :initial => true
@@ -19,7 +20,7 @@ class Order < ActiveRecord::Base
     state :delivered
     state :canceled
 
-    event :checkout do
+    event :checkout, :after => :update_sold_count do
       transitions :from => :in_progress, :to => :in_queue
     end
     event :confirm do
@@ -47,25 +48,6 @@ class Order < ActiveRecord::Base
       order_item.quantity += quantity
     end
     order_item.save
-  end
-
-  def save_address(type = 'billing', type_address_params = {})
-    type_address_index = (type+'_address').to_sym
-    type_address_value = self.send(type_address_index)
-    if type_address_value.nil? || self.billing_address_id == self.shipping_address_id || self.user.orders.
-        where('id != :order_id AND (billing_address_id = :addr_id OR shipping_address_id = :addr_id)',
-              order_id: self.id, addr_id: type_address_value.id).any?
-      type_address_value = Address.find_or_create_by(type_address_params)
-      if type_address_value.invalid?
-        type_address_value.errors.full_messages.each {|error| self.errors[:base] << error }
-        return false
-      end
-      self.update(type_address_index => type_address_value)
-    else
-      result = type_address_value.update(type_address_params)
-      type_address_value.errors.full_messages.each {|error| self.errors[:base] << error } unless result
-      return result
-    end
   end
 
   def save_credit_card(credit_card_params = {})
@@ -119,7 +101,17 @@ class Order < ActiveRecord::Base
     '$' +@total_price.to_s + ' (' + @total_items.to_s + ')'
   end
 
+  def books
+    self.order_items.includes(:book).references(:book)
+  end
+
   protected
+  def update_sold_count
+    self.order_items.each do |item|
+      Book.update(item.book_id, :sold_count => OrderItem.where(book_id: item.book_id).sum(:quantity))
+    end
+  end
+
   def set_totals
     totals = self.order_items.select('SUM(quantity) as quantity, SUM(quantity*price) as price').first
     @total_price = totals.price.nil? ? 0 : totals.price

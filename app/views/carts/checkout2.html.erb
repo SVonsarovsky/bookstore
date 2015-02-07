@@ -10,7 +10,7 @@
             <%- if @shipping_methods.blank? %>
                 There are no shipping methods active.
             <%- else %>
-                <%= render 'customers/errors', area: 'shipping_method' %>
+                <%= render 'shared/errors', area: 'shipping_method' %>
                 <%= hidden_field_tag('shipping_cost', @shipping_method.cost) %>
                 <% @shipping_methods.each do |shipping| %>
                 <div class="radio">

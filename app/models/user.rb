@@ -19,20 +19,25 @@ class User < ActiveRecord::Base
   end
 
   def save_address(type = 'billing', type_address_params = {})
-    type_address_index = (type+'_address').to_sym
-    type_address_value = self.send(type_address_index)
-    if type_address_value.nil? || self.billing_address_id == self.shipping_address_id || self.orders.
-          where('billing_address_id = :addr_id OR shipping_address_id = :addr_id', addr_id: type_address_value.id).any?
-      type_address_value = Address.find_or_create_by(type_address_params)
-      if type_address_value.invalid?
-        type_address_value.errors.full_messages.each {|error| self.errors[:base] << error }
+    address_index = (type+'_address').to_sym
+    address = self.send(address_index)
+    if (address.nil? || self.billing_address_id == self.shipping_address_id || self.orders.not_in_progress.
+          where('billing_address_id = :addr_id OR shipping_address_id = :addr_id', addr_id: address.id).any?)
+      address = Address.find_or_create_by(type_address_params)
+      if address.invalid?
+        set_address_errors(address)
         return false
       end
-      self.update(type_address_index => type_address_value)
+      self.update(address_index => address)
     else
-      result = type_address_value.update(type_address_params)
-      type_address_value.errors.full_messages.each {|error| self.errors[:base] << error } unless result
+      result = address.update(type_address_params)
+      set_address_errors(address) unless result
       return result
     end
+  end
+
+  private
+  def set_address_errors(address)
+    address.errors.full_messages.each {|error| self.errors[:base] << error }
   end
 end

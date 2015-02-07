@@ -6,7 +6,7 @@ $(document).ready(function(){
     }
     
     if ($('#credit_card_number').length) {
-        $('#credit_card_number').mask('0000 0000 0000 0000');
+        $('#credit_card_number').mask('0000-0000-0000-0000');
     }
     if ($('#credit_card_code').length) {
         $('#credit_card_code').mask('000');

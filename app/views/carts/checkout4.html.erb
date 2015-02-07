@@ -7,12 +7,12 @@
         <div class="col-md-3">
             <div class="edit"><%= link_to('(edit)', cart_checkout_path) %></div>
             <h2>Shipping Address</h2>
-            <%= render 'address/details', address: @shipping_address %>
+            <%= render 'shared/addr_details', address: @shipping_address %>
         </div>
         <div class="col-md-3">
             <div class="edit"><%= link_to('(edit)', cart_checkout_path) %></div>
             <h2>Billing Address</h2>
-            <%= render 'address/details', address: @billing_address %>
+            <%= render 'shared/addr_details', address: @billing_address %>
         </div>
         <div class="col-md-3">
             <div class="edit"><%= link_to('(edit)', cart_checkout_path(2)) %></div>
@@ -32,7 +32,7 @@
     </div>
 </div>
 <div class="order clearfix">
-    <%= render 'orders/order' %>
+    <%= render 'shared/order' %>
     <div class="clearfix">
         <div class="pull-right">
             <div class="subtotal clearfix">

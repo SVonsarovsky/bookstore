@@ -23,7 +23,7 @@
       </div>
       <div class="col-md-3 text-right">
         <% if user_signed_in? %>
-            <%= link_to_unless_current 'Settings', edit_customer_path %> |
+            <%= link_to_unless_current 'Settings', edit_user_path %> |
             <%= link_to_unless_current 'Orders', orders_path %> |
             <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
         <% else %>

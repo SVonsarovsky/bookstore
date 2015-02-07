@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-4">
             <h2>CARD DETAILS</h2>
-            <%= render 'customers/errors', area: 'credit_card' %>
+            <%= render 'shared/errors', area: 'credit_card' %>
             <div class="form-group">
                 <%= text_field_tag('credit_card[number]', @credit_card.number, :class => 'form-control', :placeholder => 'Card Number') %>
             </div>

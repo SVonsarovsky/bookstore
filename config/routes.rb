@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   get    '/cart/checkout(/:step)', to: 'carts#checkout', as: 'cart_checkout', step: /[2-5]{1}/
   delete '/cart/:item_id', to: 'carts#remove_item', as: 'cart_item'
   resource  :cart, only: [:create, :show, :update, :destroy]
-  resource  :customer, only: [:edit, :update, :destroy]
+  resource  :user, only: [:edit, :update, :destroy]
   resources :orders, only: [:index, :show]
 
   # The priority is based upon order of creation: first created -> highest priority.

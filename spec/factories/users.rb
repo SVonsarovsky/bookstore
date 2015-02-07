@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :user do
-    email "MyString"
-password "MyString"
+    email { Faker::Internet.email }
+    billing_address { FactoryGirl.create(:address) }
+    shipping_address { FactoryGirl.create(:address) }
   end
-
 end
