@@ -11,8 +11,7 @@ class ApplicationController < ActionController::Base
   end
 
   def categories
-    @categories = Category.order(:name) if @categories.nil?
-    @categories
+    @categories ||= Category.order(:name)
   end
 
   def cart_details

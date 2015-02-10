@@ -24,15 +24,9 @@ class User < ActiveRecord::Base
     if (address.nil? || self.billing_address_id == self.shipping_address_id || self.orders.not_in_progress.
           where('billing_address_id = :addr_id OR shipping_address_id = :addr_id', addr_id: address.id).any?)
       address = Address.find_or_create_by(type_address_params)
-      if address.invalid?
-        set_address_errors(address)
-        return false
-      end
       self.update(address_index => address)
     else
-      result = address.update(type_address_params)
-      set_address_errors(address) unless result
-      return result
+      address.update(type_address_params)
     end
   end
 
@@ -48,9 +42,4 @@ class User < ActiveRecord::Base
     self.orders.not_in_progress.where.not(:completed_at => nil).order(completed_at: :desc).first
   end
 
-
-  private
-  def set_address_errors(address)
-    address.errors.full_messages.each {|error| self.errors[:base] << error }
-  end
 end

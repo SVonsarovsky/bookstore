@@ -100,7 +100,7 @@ RSpec.describe Order, :type => :model do
   context '#save_credit_card (there are more cases than 3 ones mentioned below)' do
     xit 'update current credit card data'
     xit 'creates new credit card and save it in order'
-    xit 'find existing credit card and save it in order'
+    xit 'finds existing credit card and save it in order'
   end
 
 end

@@ -76,12 +76,7 @@ class CartsController < ApplicationController
     billing_address_params = address_params('billing').merge(user: @customer)
     shipping_address_params = address_params('shipping').merge(user: @customer)
 
-    saving_result = save_address('billing', billing_address_params)
-    if saving_result
-      saving_result = save_address('shipping', shipping_address_params)
-    end
-
-    if saving_result
+    if (save_address('billing', billing_address_params) && save_address('shipping', shipping_address_params))
       redirect_to cart_checkout_path(2), :notice => 'Your addresses were saved.'
     else
       @countries = Country.order(:name).map{|country| [country.name, country.id]}
@@ -208,6 +203,8 @@ class CartsController < ApplicationController
   end
 
   def set_area_errors(area, obj = 'order')
-    @errors[area.to_sym] = instance_variable_get("@#{obj}").errors.full_messages.uniq
+    errors = instance_variable_get("@#{obj}").errors.full_messages.uniq
+    errors = instance_variable_get("@#{obj}").send(area).errors.full_messages.uniq unless errors.length > 0
+    @errors[area.to_sym] = errors
   end
 end

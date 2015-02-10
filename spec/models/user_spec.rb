@@ -55,7 +55,7 @@ RSpec.describe User, :type => :model do
   context '#save_address (there are more cases than 3 ones mentioned below)' do
     xit 'update current address data'
     xit 'creates new address and save it for user'
-    xit 'find existing address and save it for user'
+    xit 'finds existing address and save it for user'
   end
 
   context '#get_order_in_progress' do

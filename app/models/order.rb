@@ -4,6 +4,7 @@ class Order < ActiveRecord::Base
   has_many :order_items, dependent: :destroy
   belongs_to :user
   belongs_to :credit_card
+  accepts_nested_attributes_for :credit_card
   belongs_to :shipping_method
   belongs_to :billing_address, class_name: 'Address'
   belongs_to :shipping_address, class_name: 'Address'
@@ -55,15 +56,9 @@ class Order < ActiveRecord::Base
     credit_card = self.credit_card
     if credit_card.nil? || self.user.orders.not_in_progress.where(credit_card: credit_card).any?
       credit_card = CreditCard.find_or_create_by(credit_card_params)
-      if credit_card.invalid?
-        credit_card.errors.full_messages.each {|error| self.errors[:base] << error }
-        return false
-      end
       self.update(:credit_card => credit_card)
     else
-      result = credit_card.update(credit_card_params)
-      credit_card.errors.full_messages.each {|error| self.errors[:base] << error } unless result
-      return result
+      credit_card.update(credit_card_params)
     end
   end
 
