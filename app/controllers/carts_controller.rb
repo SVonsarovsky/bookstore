@@ -51,7 +51,7 @@ class CartsController < ApplicationController
   def checkout
     @customer = current_user
     step = params.has_key?(:step) ? params[:step] : '1'
-    @order = (step == '5') ? Order.get_last_submitted_one(@customer) : current_order
+    @order = (step == '5') ? @customer.get_last_placed_order : current_order
     self.send('checkout'+step)
   end
 

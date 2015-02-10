@@ -67,18 +67,6 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def self.get_in_progress_one(user)
-    user.orders.find_or_create_by(:state => 'in_progress')
-  end
-
-  def self.get_submitted_ones(user)
-    user.orders.where.not(:state => 'in_progress').order(state: :asc, completed_at: :desc)
-  end
-
-  def self.get_last_submitted_one(user)
-    user.orders.where.not(:state => 'in_progress', :completed_at => nil).order(completed_at: :desc).first
-  end
-
   def status
     self.state == 'in_queue' ? 'waiting for processing' : self.state.tr('_', ' ')
   end

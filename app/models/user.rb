@@ -36,6 +36,19 @@ class User < ActiveRecord::Base
     end
   end
 
+  def get_order_in_progress
+    self.orders.find_or_create_by(:state => 'in_progress')
+  end
+
+  def get_placed_orders
+    self.orders.not_in_progress.order(state: :asc, completed_at: :desc)
+  end
+
+  def get_last_placed_order
+    self.orders.not_in_progress.where.not(:completed_at => nil).order(completed_at: :desc).first
+  end
+
+
   private
   def set_address_errors(address)
     address.errors.full_messages.each {|error| self.errors[:base] << error }

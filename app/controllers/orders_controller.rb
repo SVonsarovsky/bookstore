@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   def index
     @order = current_order
     @order_items = @order.books
-    @orders = Order.get_submitted_ones(current_user)
+    @orders = current_user.get_placed_orders
   end
 
   # GET /orders/1

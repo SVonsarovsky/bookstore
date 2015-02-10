@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_order
-    Order.get_in_progress_one(current_user) unless current_user.nil?
+    current_user.get_order_in_progress unless current_user.nil?
   end
 
   def render_404

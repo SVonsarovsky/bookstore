@@ -57,4 +57,20 @@ RSpec.describe User, :type => :model do
     xit 'creates new address and save it for user'
     xit 'find existing address and save it for user'
   end
+
+  context '#get_order_in_progress' do
+    xit 'returns order'
+    xit 'returns order in progress'
+  end
+
+  context '#get_placed_orders' do
+    xit 'returns orders'
+    xit 'returns orders with status different from "in_progress"'
+  end
+
+  context '#get_last_placed_order' do
+    xit 'returns order'
+    xit 'returns order with status different from "in_progress"'
+  end
+
 end

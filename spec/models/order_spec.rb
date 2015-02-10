@@ -103,20 +103,4 @@ RSpec.describe Order, :type => :model do
     xit 'find existing credit card and save it in order'
   end
 
-  context '.get_in_progress_one' do
-    xit 'returns order'
-    xit 'returns order in progress'
-  end
-
-  context '.get_submitted_ones' do
-    xit 'returns orders'
-    xit 'returns orders with status different from "in_progress"'
-  end
-
-  context '.get_last_submitted_one' do
-    xit 'returns order'
-    xit 'returns order with status different from "in_progress"'
-  end
-
-
 end
