@@ -44,7 +44,9 @@ class UsersController < ApplicationController
     if @user.save_address(type, address_params)
       redirect_to edit_user_path, :notice => 'Your '+type+' address was updated.'
     else
-      @errors[(type+'_address').to_sym] = @user.errors.full_messages.uniq
+      errors = @user.errors.full_messages.uniq
+      errors = @user.send(type+'_address').errors.full_messages.uniq unless errors.length > 0
+      @errors[(type+'_address').to_sym] = errors
       edit
       instance_variable_set("@#{type}_address", Address.new(address_params))
       render :edit
