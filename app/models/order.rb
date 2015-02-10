@@ -4,7 +4,6 @@ class Order < ActiveRecord::Base
   has_many :order_items, dependent: :destroy
   belongs_to :user
   belongs_to :credit_card
-  accepts_nested_attributes_for :credit_card
   belongs_to :shipping_method
   belongs_to :billing_address, class_name: 'Address'
   belongs_to :shipping_address, class_name: 'Address'
