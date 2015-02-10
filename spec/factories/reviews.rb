@@ -3,6 +3,6 @@ FactoryGirl.define do
     user { FactoryGirl.create(:user) }
     book { FactoryGirl.create(:book) }
     text { Faker::Lorem.paragraph }
-    rating { rand(1..5) }
+    rating { rand(Review::MIN_RATING..Review::MAX_RATING) }
   end
 end

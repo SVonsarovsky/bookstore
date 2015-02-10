@@ -2,8 +2,8 @@ class CreditCard < ActiveRecord::Base
   belongs_to :user
   has_many :orders
   validates :user, :number, :expiration_month, :expiration_year, presence: true
-  validates :number, format: { with: /[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}\z/i }, presence: true
-  validates :code, format: { with: /[0-9]{3}/i }, presence: true
+  validates :number, format: { with: /[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}/ }, presence: true
+  validates :code, format: { with: /[0-9]{3}/ }, presence: true
 
   def display_number
     '****-****-****-'+number.to_s.slice(-4..-1)

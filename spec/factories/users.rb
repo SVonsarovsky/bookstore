@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :user do
     email { Faker::Internet.email }
-    billing_address { FactoryGirl.create(:address) }
-    shipping_address { FactoryGirl.create(:address) }
+    password { Faker::Internet.password(8) }
   end
 end

@@ -10,6 +10,7 @@ class Order < ActiveRecord::Base
 
   validates :number, uniqueness: true
   validates :shipping_cost, numericality: {:greater_than_or_equal_to => 0}, allow_blank: true
+  validates :state, :user, presence: true
 
   scope :not_in_progress, -> { where.not(state: 'in_progress') }
   enum state: ['in_progress', 'in_queue', 'in_delivery', 'delivered', 'canceled']
@@ -52,7 +53,7 @@ class Order < ActiveRecord::Base
 
   def save_credit_card(credit_card_params = {})
     credit_card = self.credit_card
-    if credit_card.nil? || self.user.orders.where(credit_card: credit_card).any?
+    if credit_card.nil? || self.user.orders.not_in_progress.where(credit_card: credit_card).any?
       credit_card = CreditCard.find_or_create_by(credit_card_params)
       if credit_card.invalid?
         credit_card.errors.full_messages.each {|error| self.errors[:base] << error }
@@ -94,11 +95,6 @@ class Order < ActiveRecord::Base
   def total_items
     set_totals if @total_items.nil?
     @total_items
-  end
-
-  def totals
-    set_totals if @total_price.nil?
-    '$' +@total_price.to_s + ' (' + @total_items.to_s + ')'
   end
 
   def books

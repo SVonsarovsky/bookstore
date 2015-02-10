@@ -8,6 +8,7 @@ FactoryGirl.define do
     zip_code { Faker::Address.zip_code }
     city { Faker::Address.city }
     phone { Faker::PhoneNumber.phone_number }
+    user { FactoryGirl.create(:user) }
     country { FactoryGirl.create(:country) }
 
   end

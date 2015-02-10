@@ -55,6 +55,7 @@ gem 'kaminari'
 gem 'jquery-star-rating-rails'
 gem 'aasm'
 gem 'rails_admin_aasm'
+gem 'i18n'
 
 group :development, :test do
   gem 'rspec-rails'

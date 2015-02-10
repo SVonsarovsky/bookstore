@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(version: 20150207165711) do
 
   create_table "credit_cards", force: true do |t|
     t.string   "number"
-    t.integer  "code"
+    t.string   "code"
     t.integer  "expiration_month"
     t.integer  "expiration_year"
     t.integer  "user_id"
