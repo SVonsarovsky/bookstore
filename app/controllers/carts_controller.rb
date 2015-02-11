@@ -10,7 +10,6 @@ class CartsController < ApplicationController
   # GET /cart
   def show
     @cart_items = @order.books
-    @subtotal = @order.total_price
   end
 
   # DELETE /cart
@@ -67,7 +66,6 @@ class CartsController < ApplicationController
   def checkout1
     @billing_address = get_initial_address 'billing'
     @shipping_address = get_initial_address 'shipping'
-    set_countries
     render :checkout1
   end
 
@@ -200,11 +198,5 @@ class CartsController < ApplicationController
 
   def credit_card_params
     params.require(:credit_card).permit(:number, :expiration_month, :expiration_year, :code)
-  end
-
-  def set_area_errors(area, obj = 'order')
-    errors = instance_variable_get("@#{obj}").errors.full_messages.uniq
-    errors = instance_variable_get("@#{obj}").send(area).errors.full_messages.uniq unless errors.length > 0
-    @errors[area.to_sym] = errors
   end
 end

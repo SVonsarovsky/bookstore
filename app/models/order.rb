@@ -53,7 +53,7 @@ class Order < ActiveRecord::Base
 
   def save_credit_card(credit_card_params = {})
     credit_card = self.credit_card
-    if credit_card.nil? || self.user.orders.not_in_progress.where(credit_card: credit_card).any?
+    if (credit_card.nil? || credit_card.used_in_placed_order?)
       credit_card = CreditCard.find_or_create_by(credit_card_params)
       self.update(:credit_card => credit_card)
     else

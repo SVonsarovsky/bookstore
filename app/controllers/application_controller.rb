@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   layout :layout_by_resource
-  helper_method :rails_admin?, :categories, :cart_details
+  helper_method :rails_admin?, :categories, :countries, :cart_details
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
 
   def rails_admin?
@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
 
   def categories
     @categories ||= Category.order(:name)
+  end
+
+  def countries
+    @countries ||= Country.order(:name).map{|country| [country.name, country.id]}
   end
 
   def cart_details
@@ -67,8 +71,10 @@ class ApplicationController < ActionController::Base
         permit(:first_name, :last_name, :address, :city, :country_id, :zip_code, :phone)
   end
 
-  def set_countries
-    @countries = Country.order(:name).map{|country| [country.name, country.id]}
+  def set_area_errors(area, obj = 'order')
+    errors = instance_variable_get("@#{obj}").errors.full_messages.uniq
+    errors = instance_variable_get("@#{obj}").send(area).errors.full_messages.uniq unless errors.length > 0
+    @errors[area.to_sym] = errors
   end
 
 end

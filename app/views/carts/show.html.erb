@@ -1,5 +1,5 @@
 <div class="cart clearfix">
-    <%- if @cart_items.length > 0 %>
+    <%- unless @cart_items.blank? %>
         <%= form_tag(cart_path, :method => 'put') do %>
         <table class="table table-condensed">
             <thead>
@@ -28,7 +28,7 @@
             </tbody>
         </table>
         <div class="clearfix">
-            <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong>$<%= @subtotal %></strong></div>
+            <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong>$<%= @order.total_price %></strong></div>
         </div>
         <div class="form-inline pull-right">
             <!--<input type="text" class="form-control" placeholder="Coupon code" size="12">-->

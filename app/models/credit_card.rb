@@ -22,4 +22,8 @@ class CreditCard < ActiveRecord::Base
     last_year = first_year+7
     (first_year..last_year).map{|year| [year, year]}
   end
+
+  def used_in_placed_order?
+    self.user.orders.not_in_progress.where(credit_card: self).any?
+  end
 end

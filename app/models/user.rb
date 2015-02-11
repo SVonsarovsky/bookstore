@@ -21,8 +21,7 @@ class User < ActiveRecord::Base
   def save_address(type = 'billing', type_address_params = {})
     address_index = (type+'_address').to_sym
     address = self.send(address_index)
-    if (address.nil? || self.billing_address_id == self.shipping_address_id || self.orders.not_in_progress.
-          where('billing_address_id = :addr_id OR shipping_address_id = :addr_id', addr_id: address.id).any?)
+    if (address.nil? || self.billing_address_id == self.shipping_address_id || address.used_in_placed_orders?)
       address = Address.find_or_create_by(type_address_params)
       self.update(address_index => address)
     else

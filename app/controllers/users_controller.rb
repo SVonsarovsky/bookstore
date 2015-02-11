@@ -1,11 +1,16 @@
 class UsersController < ApplicationController
   before_action :require_login, :set_user
 
+  def initialize
+    super
+    @errors = {}
+  end
+
   # GET /user/edit
   def edit
-    @billing_address = @user.billing_address.nil? ? Address.new : @user.billing_address
-    @shipping_address = @user.shipping_address.nil? ? Address.new : @user.shipping_address
-    set_countries
+    @billing_address ||= @user.billing_address.nil? ? Address.new : @user.billing_address
+    @shipping_address ||= @user.shipping_address.nil? ? Address.new : @user.shipping_address
+    render :edit
   end
 
   # PATCH/PUT /user
@@ -18,8 +23,6 @@ class UsersController < ApplicationController
       save_address 'billing'
     elsif params[:shipping_address]
       save_address 'shipping'
-    else
-      redirect_to edit_user_path
     end
   end
 
@@ -36,7 +39,6 @@ class UsersController < ApplicationController
   private
   def set_user
     @user = current_user
-    @errors = {}
   end
 
   def save_address(type = 'billing')
@@ -44,38 +46,28 @@ class UsersController < ApplicationController
     if @user.save_address(type, address_params)
       redirect_to edit_user_path, :notice => 'Your '+type+' address was updated.'
     else
-      errors = @user.errors.full_messages.uniq
-      errors = @user.send(type+'_address').errors.full_messages.uniq unless errors.length > 0
-      @errors[(type+'_address').to_sym] = errors
-      edit
       instance_variable_set("@#{type}_address", Address.new(address_params))
-      render :edit
+      set_area_errors type+'_address', 'user'
+      edit
     end
   end
 
-  def user_email_param
-    params.require(:user).permit(:email)
-  end
   def update_email
-    if @user.update(user_email_param)
+    if @user.update(params.require(:user).permit(:email))
       redirect_to edit_user_path, :notice => 'Your e-mail was updated.'
     else
-      @errors[:email] = @user.errors.full_messages.uniq
+      set_area_errors 'email', 'user'
       edit
-      render :edit
     end
   end
 
-  def user_password_params
-    params.require(:user).permit(:current_password, :password, :password_confirmation)
-  end
   def update_password
-    if @user.update_with_password(user_password_params)
+    password_params = params.require(:user).permit(:current_password, :password, :password_confirmation)
+    if @user.update_with_password(password_params)
       redirect_to edit_user_path, :notice => 'Your password was updated.'
     else
-      @errors[:password] = @user.errors.full_messages
+      set_area_errors 'password', 'user'
       edit
-      render :edit
     end
   end
 
