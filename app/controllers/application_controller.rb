@@ -3,8 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   layout :layout_by_resource
-  helper_method :rails_admin?, :categories, :countries, :cart_details
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
+  helper_method :rails_admin?, :categories, :countries, :cart_details
 
   def rails_admin?
     devise_controller? && resource_name.to_s.downcase == 'admin'
@@ -53,28 +53,11 @@ class ApplicationController < ActionController::Base
   end
 
   def last_open_page
-    unless user_signed_in?
-      session[:last_open_page] = request.original_fullpath
-    end
+    session[:last_open_page] = request.original_fullpath unless user_signed_in?
   end
 
-  def require_login(text = '')
+  def require_login
     last_open_page if request.method == 'GET'
-    unless user_signed_in?
-      flash[:notice] = 'You must be signed in' + (text.length > 0 ? ' to ' + text : '')
-      redirect_to sign_in_path
-    end
+    redirect_to sign_in_path, :notice => 'You must be signed in.' unless user_signed_in?
   end
-
-  def address_params(type = 'billing')
-    params.require((type+'_address').to_sym).
-        permit(:first_name, :last_name, :address, :city, :country_id, :zip_code, :phone)
-  end
-
-  def set_area_errors(area, obj = 'order')
-    errors = instance_variable_get("@#{obj}").errors.full_messages.uniq
-    errors = instance_variable_get("@#{obj}").send(area).errors.full_messages.uniq unless errors.length > 0
-    @errors[area.to_sym] = errors
-  end
-
 end

@@ -16,10 +16,15 @@ Rails.application.routes.draw do
     resources :reviews, only: [:new, :create]
   end
 
-  get    '/cart/checkout(/:step)', to: 'carts#checkout', as: 'cart_checkout', step: /[2-5]{1}/
-  delete '/cart/:item_id', to: 'carts#remove_item', as: 'cart_item'
-  resource  :cart, only: [:create, :show, :update, :destroy]
-  resource  :user, only: [:edit, :update, :destroy]
+  resource  :cart, only: [:create, :show, :update, :destroy] do
+    delete ':item_id', action: 'remove_item', as: 'item', item_id: /[0-9]+/
+  end
+  resources :checkout, only: [:show, :update]
+  resource  :user, only: [:edit, :destroy] do
+    put 'address',  action: 'save_address'
+    put 'email',    action: 'update_email'
+    put 'password', action: 'update_password'
+  end
   resources :orders, only: [:index, :show]
 
   # The priority is based upon order of creation: first created -> highest priority.

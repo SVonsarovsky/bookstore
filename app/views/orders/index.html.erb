@@ -1,9 +1,9 @@
 <div class="orders clearfix">
     <h1>Orders</h1>
     <h2>In progress</h2>
-    <%- if @order_items.length > 0 %>
+    <%- unless @order_items.blank? %>
     <div class="order">
-        <%= render 'shared/order' %>
+        <%= render 'shared/order', order_items: @order_items %>
         <div class="clearfix">
             <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong>$<%= @order.total_price %></strong></div>
             <%= link_to 'GO TO CART', cart_path, class: 'btn btn-default' %>

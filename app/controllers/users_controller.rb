@@ -1,28 +1,43 @@
 class UsersController < ApplicationController
-  before_action :require_login, :set_user
-
-  def initialize
-    super
-    @errors = {}
-  end
+  include FormProcessing
+  before_action :require_login, :set_data
 
   # GET /user/edit
   def edit
-    @billing_address ||= @user.billing_address.nil? ? Address.new : @user.billing_address
-    @shipping_address ||= @user.shipping_address.nil? ? Address.new : @user.shipping_address
+    @billing_address  ||= @user.billing_address  || Address.new
+    @shipping_address ||= @user.shipping_address || Address.new
     render :edit
   end
 
-  # PATCH/PUT /user
-  def update
-    if params[:user] && params[:user][:email]
-      update_email
-    elsif params[:user] && params[:user][:password]
-      update_password
-    elsif params[:billing_address]
-      save_address 'billing'
-    elsif params[:shipping_address]
-      save_address 'shipping'
+  # PUT /user/update_email
+  def update_email
+    if @user.update(user_params)
+      redirect_to edit_user_path, :notice => 'Your e-mail was updated.'
+    else
+      set_errors_for 'user', 'email'
+      edit
+    end
+  end
+
+  # PUT /user/update_password
+  def update_password
+    if @user.update_with_password(user_params)
+      redirect_to edit_user_path, :notice => 'Your password was updated.'
+    else
+      set_errors_for 'user', 'password'
+      edit
+    end
+  end
+
+  # PUT /user/save_address
+  def save_address
+    type = params[:type] || 'billing'
+    if @user.save_address(address_params(type).merge(type: type))
+      redirect_to edit_user_path, :notice => 'Your '+type+' address was updated.'
+    else
+      instance_variable_set("@#{type}_address", Address.new(address_params(type)))
+      set_errors_for 'user', type+'_address'
+      edit
     end
   end
 
@@ -37,38 +52,12 @@ class UsersController < ApplicationController
   end
 
   private
-  def set_user
+  def set_data
     @user = current_user
+    @errors = {}
   end
 
-  def save_address(type = 'billing')
-    address_params = address_params(type).merge(user: @user)
-    if @user.save_address(type, address_params)
-      redirect_to edit_user_path, :notice => 'Your '+type+' address was updated.'
-    else
-      instance_variable_set("@#{type}_address", Address.new(address_params))
-      set_area_errors type+'_address', 'user'
-      edit
-    end
+  def user_params
+    params.require(:user).permit(:email, :current_password, :password, :password_confirmation)
   end
-
-  def update_email
-    if @user.update(params.require(:user).permit(:email))
-      redirect_to edit_user_path, :notice => 'Your e-mail was updated.'
-    else
-      set_area_errors 'email', 'user'
-      edit
-    end
-  end
-
-  def update_password
-    password_params = params.require(:user).permit(:current_password, :password, :password_confirmation)
-    if @user.update_with_password(password_params)
-      redirect_to edit_user_path, :notice => 'Your password was updated.'
-    else
-      set_area_errors 'password', 'user'
-      edit
-    end
-  end
-
 end

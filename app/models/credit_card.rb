@@ -18,7 +18,7 @@ class CreditCard < ActiveRecord::Base
   end
 
   def year_list
-    first_year = Time.now.year
+    first_year = Time.zone.now.year
     last_year = first_year+7
     (first_year..last_year).map{|year| [year, year]}
   end

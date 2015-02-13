@@ -12,12 +12,12 @@ RSpec.describe User, :type => :model do
     expect(user).to validate_uniqueness_of(:email)
   end
 
-  it 'has a name' do
-    expect(user).to respond_to (:name)
+  it 'gets a name' do
+    expect(user).to respond_to(:name)
   end
 
   it 'has a password' do
-    expect(user).to respond_to (:password)
+    expect(user).to respond_to(:password)
   end
 
   it 'has many reviews' do
@@ -36,16 +36,16 @@ RSpec.describe User, :type => :model do
     expect(user).to have_many(:addresses)
   end
 
-  it 'has a billing address' do
-    expect(user).to respond_to (:billing_address)
+  it 'gets a billing address' do
+    expect(user).to respond_to(:billing_address)
   end
 
   it 'belongs to billing address' do
     expect(user).to belong_to(:billing_address)
   end
 
-  it 'has a shipping address' do
-    expect(user).to respond_to (:shipping_address)
+  it 'gets a shipping address' do
+    expect(user).to respond_to(:shipping_address)
   end
 
   it 'belongs to shipping address' do
@@ -71,6 +71,11 @@ RSpec.describe User, :type => :model do
   context '#get_last_placed_order' do
     xit 'returns order'
     xit 'returns order with status different from "in_progress"'
+  end
+
+  context '#get_last_credit_card' do
+    xit 'returns credit card'
+    xit 'returns last credit card after request with correct order'
   end
 
 end

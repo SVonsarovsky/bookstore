@@ -4,8 +4,8 @@
     <div class="order-status"> &nbsp; <%= @order.status %></div>
 </div>
 <div class="order clearfix">
-<%- if @order_items.length > 0 %>
-    <%= render 'shared/order' %>
+<%- unless @order_items.blank? %>
+    <%= render 'shared/order', order_items: @order_items %>
     <div class="clearfix">
         <div class="pull-right">
             <div class="subtotal clearfix">

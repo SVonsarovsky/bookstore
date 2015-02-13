@@ -44,4 +44,9 @@ RSpec.describe Book, :type => :model do
     expect(book).to have_many(:order_items)
   end
 
+  context '.bestsellers' do
+    xit 'returns data in correct order'
+    xit 'limits data in correct way'
+  end
+
 end

@@ -39,4 +39,26 @@ RSpec.describe CreditCard, :type => :model do
   it 'has an expiration_year' do
     expect(credit_card).to validate_presence_of(:expiration_year)
   end
+
+  it 'gets a display number' do
+    expect(credit_card).to respond_to(:display_number)
+  end
+
+  it 'gets a display month' do
+    expect(credit_card).to respond_to(:display_month)
+  end
+
+  it "gets a months' list" do
+    expect(credit_card).to respond_to(:month_list)
+  end
+
+  it "gets a years' list" do
+    expect(credit_card).to respond_to(:year_list)
+  end
+
+  context '#used_in_placed_orders?' do
+    xit 'returns true if used'
+    xit 'returns false if not used'
+  end
+
 end

@@ -56,6 +56,7 @@ gem 'jquery-star-rating-rails'
 gem 'aasm'
 gem 'rails_admin_aasm'
 gem 'i18n'
+gem 'wicked'
 
 group :development, :test do
   gem 'rspec-rails'

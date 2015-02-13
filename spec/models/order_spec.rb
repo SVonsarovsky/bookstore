@@ -36,7 +36,7 @@ RSpec.describe Order, :type => :model do
     expect(order.state).to eq 'in_progress'
   end
 
-  it 'has a status' do
+  it 'gets a status' do
     expect(order).to respond_to(:status)
   end
 
@@ -76,6 +76,34 @@ RSpec.describe Order, :type => :model do
     expect(order).to validate_numericality_of(:shipping_cost).is_greater_than_or_equal_to(0)
   end
 
+  context '.not_in_progress' do
+    it 'not includes orders with state "in_progress"' do
+      order_in_progress = FactoryGirl.create(:order, state: 'in_progress')
+      expect(Order.not_in_progress).not_to include(order_in_progress)
+    end
+
+    it 'includes orders with state different from "in_progress"' do
+      order_not_in_progress = FactoryGirl.create(:order, state: %w(in_queue in_delivery delivered canceled).sample)
+      expect(Order.not_in_progress).to include(order_not_in_progress)
+    end
+  end
+
+  context '#checkout' do
+
+  end
+
+  context '#confirm' do
+
+  end
+
+  context '#cancel' do
+
+  end
+
+  context '#deliver' do
+
+  end
+
   context '#add_book' do
     it 'is able to add a book to the order' do
       book = FactoryGirl.create(:book)
@@ -101,6 +129,14 @@ RSpec.describe Order, :type => :model do
     xit 'update current credit card data'
     xit 'creates new credit card and save it in order'
     xit 'finds existing credit card and save it in order'
+  end
+
+  context '#update_sold_count' do
+
+  end
+
+  context '#set_totals' do
+
   end
 
 end

@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :credit_cards, dependent: :destroy
   has_many :addresses, dependent: :nullify
   validates :email, presence: true, uniqueness: true
+  #accepts_nested_attributes_for :credit_cards
 
   belongs_to :billing_address, class_name: 'Address'
   belongs_to :shipping_address, class_name: 'Address'
@@ -18,14 +19,15 @@ class User < ActiveRecord::Base
     email.split('@').first
   end
 
-  def save_address(type = 'billing', type_address_params = {})
-    address_index = (type+'_address').to_sym
+  def save_address(address_params = {})
+    address_index = (address_params[:type]+'_address').to_sym
+    address_params.delete(:type)
     address = self.send(address_index)
     if (address.nil? || self.billing_address_id == self.shipping_address_id || address.used_in_placed_orders?)
-      address = Address.find_or_create_by(type_address_params)
-      self.update(address_index => address)
+      address = Address.find_or_create_by(address_params)
+      address.valid? && self.update(address_index => address)
     else
-      address.update(type_address_params)
+      address.update(address_params)
     end
   end
 
@@ -39,6 +41,10 @@ class User < ActiveRecord::Base
 
   def get_last_placed_order
     self.orders.not_in_progress.where.not(:completed_at => nil).order(completed_at: :desc).first
+  end
+
+  def get_last_credit_card
+    self.credit_cards.order('id DESC').limit(1).first
   end
 
 end

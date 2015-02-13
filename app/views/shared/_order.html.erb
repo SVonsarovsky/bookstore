@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody>
-    <%- @order_items.each do |item|%>
+    <%- order_items.each do |item|%>
     <tr>
         <td><%= link_to(image_tag(item.book.image.thumb, :alt => item.book.title), book_path(item.book)) %></td>
         <td>

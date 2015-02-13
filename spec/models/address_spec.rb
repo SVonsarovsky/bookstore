@@ -35,4 +35,9 @@ RSpec.describe Address, :type => :model do
     expect(address).to belong_to(:user)
   end
 
+  context '#used_in_placed_orders?' do
+    xit 'returns true if used'
+    xit 'returns false if not used'
+  end
+
 end

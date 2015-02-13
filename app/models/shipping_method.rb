@@ -1,9 +1,9 @@
 class ShippingMethod < ActiveRecord::Base
   scope :active, -> { where state: 'active' }
-  validates :name, :cost, presence: true
+  validates :name, :cost, :state, presence: true
   validates :name, uniqueness: true
-  enum state: ['inactive', 'active']
+  enum state: %w(inactive, active)
   def state_enum
-    ['inactive', 'active']
+    %w(inactive, active)
   end
 end

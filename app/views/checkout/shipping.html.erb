@@ -1,9 +1,7 @@
 <div class="checkout clearfix">
-    <div class="stages">
-      <%= link_to('ADDRESS', cart_checkout_path) %> &nbsp; <span>SHIPPING</span> &nbsp; PAYMENT &nbsp; CONFIRM &nbsp; COMPLETE
-    </div>
+    <%= render 'steps' %>
     <h1>Checkout</h1>
-    <%= form_tag(cart_path, :method => 'put') do %>
+    <%= form_tag(wizard_path, :method => 'put') do %>
     <div class="row">
         <div class="col-md-4">
             <h2>SHIPPING METHOD</h2>
@@ -45,7 +43,7 @@
     <div>
         <%= button_tag('SAVE AND CONTINUE', :class => 'btn btn-default', :type => 'submit', :name => 'shipping') %>
         <%- unless @order.shipping_method_id.nil? %>
-            <%= link_to('CONTINUE', cart_checkout_path(3), {:class => 'btn btn-default checkout'}) %>
+            <%= link_to('CONTINUE', next_wizard_path, {:class => 'btn btn-default checkout'}) %>
         <%- end %>
     </div>
     <% end %>

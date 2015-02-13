@@ -1,0 +1,11 @@
+<div class="stages">
+    <%- wizard_steps.each do |step| %>
+        <%- if current_step_index > step_index_for(step) %>
+            <%= link_to(step.upcase, wizard_path(step)) %>
+        <%- elsif current_step_index == step_index_for(step) %>
+            <span><%= step.upcase %></span>
+        <%- else %>
+            <%= step.upcase %>
+        <% end %>
+    <% end %>
+</div>

@@ -20,7 +20,7 @@ RSpec.describe OrderItem, :type => :model do
     expect(order_item).to belong_to(:order)
   end
 
-  it 'has a name' do
+  it 'gets a name' do
     expect(order_item).to respond_to(:name)
   end
 
