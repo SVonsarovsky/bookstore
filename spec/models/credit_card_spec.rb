@@ -57,8 +57,19 @@ RSpec.describe CreditCard, :type => :model do
   end
 
   context '#used_in_placed_orders?' do
-    xit 'returns true if used'
-    xit 'returns false if not used'
+    let(:states_not_in_progress) { %w(in_queue in_delivery delivered canceled) }
+    it 'returns true if used in one of the previously placed orders' do
+      FactoryGirl.create(:order, state: states_not_in_progress.sample, credit_card: credit_card, user: credit_card.user)
+      expect(credit_card.used_in_placed_orders?).to eq true
+    end
+    it 'returns false if not used' do
+      FactoryGirl.create(:order, state: states_not_in_progress.sample, user: credit_card.user)
+      expect(credit_card.used_in_placed_orders?).to eq false
+    end
+    it 'returns false if there are no placed orders' do
+      FactoryGirl.create(:order)
+      expect(credit_card.used_in_placed_orders?).to eq false
+    end
   end
 
 end

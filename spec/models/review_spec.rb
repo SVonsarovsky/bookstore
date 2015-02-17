@@ -33,7 +33,7 @@ RSpec.describe Review, :type => :model do
   end
 
   it 'has an integer rating' do
-    expect(order).to validate_numericality_of(:rating).only_integer
+    expect(review).to validate_numericality_of(:rating).only_integer
   end
 
   it "has a rating which is between #{Review::MIN_RATING} and #{Review::MAX_RATING}" do

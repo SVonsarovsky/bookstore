@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   end
 
   def get_placed_orders
-    self.orders.not_in_progress.order(state: :asc, completed_at: :desc)
+    self.orders.not_in_progress.where.not(:completed_at => nil).order(state: :asc, completed_at: :desc)
   end
 
   def get_last_placed_order
@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
   end
 
   def get_last_credit_card
-    self.credit_cards.order('id DESC').limit(1).first
+    self.credit_cards.order('id DESC').first
   end
 
 end

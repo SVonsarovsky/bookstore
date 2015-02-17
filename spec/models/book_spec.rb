@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Book, :type => :model do
-
   let(:book) { FactoryGirl.create(:book) }
 
   it 'has a title' do
@@ -45,8 +44,27 @@ RSpec.describe Book, :type => :model do
   end
 
   context '.bestsellers' do
-    xit 'returns data in correct order'
-    xit 'limits data in correct way'
+    it 'returns books in order by sold_count DESC' do
+      book1 = FactoryGirl.create(:book, sold_count: 1)
+              FactoryGirl.create(:book, sold_count: 2)
+      book3 = FactoryGirl.create(:book, sold_count: 3)
+      expect(Book.bestsellers.first.id).to eq book3.id
+      expect(Book.bestsellers.last.id).to eq book1.id
+    end
+
+    it "returns #{Book::BESTSELLERS_COUNT} books in case if there more than #{Book::BESTSELLERS_COUNT} books" do
+      (1..(Book::BESTSELLERS_COUNT+1)).each do
+        FactoryGirl.create(:book)
+      end
+      expect(Book.bestsellers.length).to eq Book::BESTSELLERS_COUNT
+    end
+
+    it "returns amount of books in case if there less or equal than #{Book::BESTSELLERS_COUNT} books" do
+      (1..rand(2..Book::BESTSELLERS_COUNT)).each do
+        FactoryGirl.create(:book)
+      end
+      expect(Book.bestsellers.length).to be <= Book::BESTSELLERS_COUNT
+    end
   end
 
 end

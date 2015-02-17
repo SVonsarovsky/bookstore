@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe ShippingMethod, :type => :model do
-
   let(:shipping_method) { FactoryGirl.create :shipping_method }
 
   it 'has a name' do

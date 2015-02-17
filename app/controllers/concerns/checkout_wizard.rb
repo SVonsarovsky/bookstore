@@ -71,8 +71,9 @@ module CheckoutWizard
   end
 
   def process_confirm
-    @order.update(completed_at: Time.zone.now)
-    @order.checkout!
+    @order.checkout
+    @order.completed_at = Time.zone.now
+    @order.save
   end
 
   def process_complete

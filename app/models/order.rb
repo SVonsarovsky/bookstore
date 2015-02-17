@@ -15,7 +15,7 @@ class Order < ActiveRecord::Base
   scope :not_in_progress, -> { where.not(state: 'in_progress') }
 
   enum state: %w(in_progress in_queue in_delivery delivered canceled)
-  aasm :column => :state, :enum => true do
+  aasm :column => :state, :enum => true, :whiny_transitions => false do
     state :in_progress, :initial => true
     state :in_queue
     state :in_delivery
@@ -54,7 +54,7 @@ class Order < ActiveRecord::Base
 
   def save_credit_card(credit_card_params = {})
     credit_card = self.credit_card
-    if (credit_card.nil? || credit_card.used_in_placed_order?)
+    if (credit_card.nil? || credit_card.used_in_placed_orders?)
       credit_card = CreditCard.find_or_create_by(credit_card_params)
       credit_card.valid? && self.update(:credit_card => credit_card)
     else

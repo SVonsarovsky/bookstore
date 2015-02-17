@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   end
 
   # PUT /user/update_email
-  def update_email
+  def email
     if @user.update(user_params)
       redirect_to edit_user_path, :notice => 'Your e-mail was updated.'
     else
@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   end
 
   # PUT /user/update_password
-  def update_password
+  def password
     if @user.update_with_password(user_params)
       redirect_to edit_user_path, :notice => 'Your password was updated.'
     else
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   end
 
   # PUT /user/save_address
-  def save_address
+  def address
     type = params[:type] || 'billing'
     if @user.save_address(address_params(type).merge(type: type))
       redirect_to edit_user_path, :notice => 'Your '+type+' address was updated.'

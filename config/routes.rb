@@ -21,9 +21,9 @@ Rails.application.routes.draw do
   end
   resources :checkout, only: [:show, :update]
   resource  :user, only: [:edit, :destroy] do
-    put 'address',  action: 'save_address'
-    put 'email',    action: 'update_email'
-    put 'password', action: 'update_password'
+    put 'address',  action: 'address'
+    put 'email',    action: 'email'
+    put 'password', action: 'password'
   end
   resources :orders, only: [:index, :show]
 

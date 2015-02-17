@@ -11,6 +11,10 @@ RSpec.describe Address, :type => :model do
     expect(address).to validate_presence_of(:zip_code)
   end
 
+  it 'has a zip code in correct format' do
+    expect(address.zip_code).to match(/[0-9]{5}/)
+  end
+
   it 'has a city' do
     expect(address).to validate_presence_of(:city)
   end
@@ -36,8 +40,23 @@ RSpec.describe Address, :type => :model do
   end
 
   context '#used_in_placed_orders?' do
-    xit 'returns true if used'
-    xit 'returns false if not used'
+    let(:states_not_in_progress) { %w(in_queue in_delivery delivered canceled) }
+    it 'returns true if used as billing address' do
+      FactoryGirl.create(:order, state: states_not_in_progress.sample, billing_address: address, user: address.user)
+      expect(address.used_in_placed_orders?).to eq true
+    end
+    it 'returns true if used as shipping address' do
+      FactoryGirl.create(:order, state: states_not_in_progress.sample, shipping_address: address, user: address.user)
+      expect(address.used_in_placed_orders?).to eq true
+    end
+    it 'returns false if not used' do
+      FactoryGirl.create(:order, state: states_not_in_progress.sample, user: address.user)
+      expect(address.used_in_placed_orders?).to eq false
+    end
+    it 'returns false if there are no placed orders' do
+      FactoryGirl.create(:order)
+      expect(address.used_in_placed_orders?).to eq false
+    end
   end
 
 end
