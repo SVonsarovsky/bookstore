@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     get  '/sign-out' => 'devise/sessions#destroy'
   end
 
-  root   'pages#home'
+  root   'books#home'
   get    '/shop', to: 'books#index'
   get    '/shop/:category_id', to: 'books#index', as: 'shop_category'
   resources :books, only: [:show] do

@@ -20,4 +20,15 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  hello: "Hello world!"
+  time:
+    formats:
+      common: '%d.%m.%Y, %H:%M'
+  order:
+    states:
+      in_progress: 'in progress'
+      in_queue: 'waiting for processing'
+      in_delivery: 'in delivery'
+      canceled: 'canceled'
+      delivered: 'delivered'
+  welcome: "Welcome to our amazing Bookstore! Choose anything you wish, we'll ship it anywhere!"

@@ -17,8 +17,8 @@
         <br />
         <%= link_to 'Add review for this book', new_book_review_path(@book.id) %>
     </div>
-    <%- unless @reviews.blank? %>
-      <%- @reviews.each do |review| %>
+    <%- unless @book.reviews.blank? %>
+      <%- @book.reviews.each do |review| %>
       <div class="review">
         <div class="pull-left rating">
           <%- (Review::MIN_RATING..Review::MAX_RATING).each do |rating| %>

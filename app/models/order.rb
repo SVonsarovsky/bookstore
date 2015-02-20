@@ -63,7 +63,7 @@ class Order < ActiveRecord::Base
   end
 
   def status
-    self.state == 'in_queue' ? 'waiting for processing' : self.state.tr('_', ' ')
+    I18n.t("order.states.#{self.state}")
   end
 
   def display_number
