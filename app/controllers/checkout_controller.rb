@@ -25,17 +25,6 @@ class CheckoutController < ApplicationController
   def set_data
     @errors = {}
     @user = current_user
-    @order = (step == :complete) ? @user.get_last_placed_order : current_order
+    @order = (step == :complete) ? @user.last_placed_order : current_order
   end
-
-  def shipping_params
-    params.permit(:shipping_method_id, :shipping_cost)
-  end
-
-  def credit_card_params
-    credit_card_params = params.require(:credit_card).permit(:number, :expiration_month, :expiration_year, :code)
-    credit_card_params = credit_card_params.merge(user: @user) unless @user.nil?
-    credit_card_params
-  end
-
 end

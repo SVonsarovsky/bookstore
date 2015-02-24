@@ -34,7 +34,7 @@ describe BooksController do
     end
 
     it 'receives :find and return book' do
-      expect(Book).to receive(:find).with(book.id).and_return(book)
+      expect(Book).to receive(:find).and_return(book)
       get :show, id: book.id
     end
 
@@ -53,17 +53,14 @@ describe BooksController do
     context 'with selected category' do
       let(:category) { FactoryGirl.create :category }
 
-      it 'receives :categories.select.first and returns category' do
-        allow(controller).to receive_message_chain(:categories, :select, :first).and_return(category)
-        allow(category).to receive(:get_books)
-        expect(controller).to receive_message_chain(:categories, :select, :first).and_return(category)
+      it 'receives Category.find and returns category' do
+        expect(Category).to receive(:find).and_return(category)
         get :index, category_id: category.id
       end
 
-      it 'receives @category.get_books and returns @books' do
-        allow(controller).to receive_message_chain(:categories, :select, :first).and_return(category)
-        allow(category).to receive(:get_books).and_return([book])
-        expect(category).to receive(:get_books).and_return([book])
+      it 'receives @category.books.order.page and returns books' do
+        allow(Category).to receive(:find).and_return(category)
+        expect(category).to receive_message_chain(:books, :order => :title, :page => nil).and_return([book])
         get :index, category_id: category.id
       end
 
@@ -83,15 +80,13 @@ describe BooksController do
     context 'without selected category' do
       let(:category) { FactoryGirl.build_stubbed :category }
 
-      it 'receives Category.new and returns @category' do
-        allow(Category).to receive(:new).and_return(category)
+      it 'receives Category.new' do
         expect(Category).to receive(:new).and_return(category)
         get :index
       end
 
       it 'receives :order.page and returns @books' do
-        allow(Book).to receive_message_chain(:order => :title, :page => 1).and_return([book])
-        expect(Book).to receive_message_chain(:order => :title, :page => 1).and_return([book])
+        expect(Book).to receive_message_chain(:order => :title, :page => nil).and_return([book])
         get :index
       end
 
@@ -105,7 +100,6 @@ describe BooksController do
         get :index
         expect(response).to render_template :index
       end
-
     end
 
   end

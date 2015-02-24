@@ -43,7 +43,7 @@ RSpec.describe Book, :type => :model do
     expect(book).to have_many(:order_items)
   end
 
-  context '.bestsellers' do
+  describe '.bestsellers' do
     it 'returns books in order by sold_count DESC' do
       book1 = FactoryGirl.create(:book, sold_count: 1)
               FactoryGirl.create(:book, sold_count: 2)
@@ -52,18 +52,22 @@ RSpec.describe Book, :type => :model do
       expect(Book.bestsellers.last.id).to eq book1.id
     end
 
-    it "returns #{Book::BESTSELLERS_COUNT} books in case if there more than #{Book::BESTSELLERS_COUNT} books" do
-      (1..(Book::BESTSELLERS_COUNT+1)).each do
-        FactoryGirl.create(:book)
+    context "when there are more than #{Book::BESTSELLERS_COUNT} books" do
+      it "returns #{Book::BESTSELLERS_COUNT} books" do
+        (1..(Book::BESTSELLERS_COUNT+1)).each do
+          FactoryGirl.create(:book)
+        end
+        expect(Book.bestsellers.length).to eq Book::BESTSELLERS_COUNT
       end
-      expect(Book.bestsellers.length).to eq Book::BESTSELLERS_COUNT
     end
 
-    it "returns amount of books in case if there less or equal than #{Book::BESTSELLERS_COUNT} books" do
-      (1..rand(2..Book::BESTSELLERS_COUNT)).each do
-        FactoryGirl.create(:book)
+    context "when there are less or equal than #{Book::BESTSELLERS_COUNT} books" do
+      it 'returns amount of all books' do
+        (1..rand(2..Book::BESTSELLERS_COUNT)).each do
+          FactoryGirl.create(:book)
+        end
+        expect(Book.bestsellers.length).to eq Book.all.length
       end
-      expect(Book.bestsellers.length).to be <= Book::BESTSELLERS_COUNT
     end
   end
 

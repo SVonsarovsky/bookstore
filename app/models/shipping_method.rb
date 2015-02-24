@@ -1,9 +1,10 @@
 class ShippingMethod < ActiveRecord::Base
+  STATES = %w(inactive, active)
   scope :active, -> { where state: 'active' }
   validates :name, :cost, :state, presence: true
   validates :name, uniqueness: true
-  enum state: %w(inactive, active)
+  enum state: STATES
   def state_enum
-    %w(inactive, active)
+    STATES
   end
 end

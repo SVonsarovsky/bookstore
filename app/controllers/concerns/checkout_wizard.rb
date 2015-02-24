@@ -33,7 +33,7 @@ module CheckoutWizard
       @notice = 'Shipping method has not been set yet!'
       return
     end
-    @credit_card ||= @order.credit_card || @user.get_last_credit_card || CreditCard.new
+    @credit_card ||= @order.credit_card || @user.last_credit_card || CreditCard.new
   end
 
   def before_confirm_show
@@ -71,9 +71,7 @@ module CheckoutWizard
   end
 
   def process_confirm
-    @order.checkout
-    @order.completed_at = Time.zone.now
-    @order.save
+    @order.checkout!
   end
 
   def process_complete
@@ -95,6 +93,16 @@ module CheckoutWizard
     @order.send(type+'_address_id=', @user.send("#{type}_address_id"))
     set_errors_for 'order', "#{type}_address" and return false unless @order.save
     true
+  end
+
+  def shipping_params
+    params.permit(:shipping_method_id, :shipping_cost)
+  end
+
+  def credit_card_params
+    credit_card_params = params.require(:credit_card).permit(:number, :expiration_month, :expiration_year, :code)
+    credit_card_params = credit_card_params.merge(user: @user) unless @user.nil?
+    credit_card_params
   end
 
 end

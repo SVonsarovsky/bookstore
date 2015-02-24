@@ -21,7 +21,7 @@ RSpec.describe CreditCard, :type => :model do
   end
 
   it 'has a number in format 0000-0000-0000-0000' do
-    expect(credit_card.number).to match(/[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}/)
+    expect(credit_card).to allow_value('3120-0000-0000-0034').for(:number)
   end
 
   it 'has a code' do
@@ -29,7 +29,7 @@ RSpec.describe CreditCard, :type => :model do
   end
 
   it 'has a code in format 000' do
-    expect(credit_card.code).to match(/[0-9]{3}/)
+    expect(credit_card).to allow_value('312').for(:code)
   end
 
   it 'has an expiration_month' do
@@ -56,19 +56,26 @@ RSpec.describe CreditCard, :type => :model do
     expect(credit_card).to respond_to(:year_list)
   end
 
-  context '#used_in_placed_orders?' do
-    let(:states_not_in_progress) { %w(in_queue in_delivery delivered canceled) }
-    it 'returns true if used in one of the previously placed orders' do
-      FactoryGirl.create(:order, state: states_not_in_progress.sample, credit_card: credit_card, user: credit_card.user)
-      expect(credit_card.used_in_placed_orders?).to eq true
+  describe '#used_in_placed_orders?' do
+    context 'when credit card was used in one of the previously placed orders' do
+      it 'returns true' do
+        FactoryGirl.create(:order_not_in_progress, credit_card: credit_card, user: credit_card.user)
+        expect(credit_card).to be_used_in_placed_orders
+      end
     end
-    it 'returns false if not used' do
-      FactoryGirl.create(:order, state: states_not_in_progress.sample, user: credit_card.user)
-      expect(credit_card.used_in_placed_orders?).to eq false
+
+    context 'when credit card was not used in the previously placed orders' do
+      it 'returns false' do
+        FactoryGirl.create(:order_not_in_progress, user: credit_card.user)
+        expect(credit_card).not_to be_used_in_placed_orders
+      end
     end
-    it 'returns false if there are no placed orders' do
-      FactoryGirl.create(:order)
-      expect(credit_card.used_in_placed_orders?).to eq false
+
+    context 'when there are no placed orders' do
+      it 'returns false' do
+        FactoryGirl.create(:order, user: credit_card.user)
+        expect(credit_card).not_to be_used_in_placed_orders
+      end
     end
   end
 

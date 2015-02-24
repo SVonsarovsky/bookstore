@@ -31,19 +31,19 @@ class User < ActiveRecord::Base
     end
   end
 
-  def get_order_in_progress
-    self.orders.find_or_create_by(:state => 'in_progress')
+  def order_in_progress
+    self.orders.find_or_create_by(:state => Order::STATE_IN_PROGRESS)
   end
 
-  def get_placed_orders
-    self.orders.not_in_progress.where.not(:completed_at => nil).order(state: :asc, completed_at: :desc)
+  def placed_orders
+    self.orders.not_in_progress.order(state: :asc, completed_at: :desc)
   end
 
-  def get_last_placed_order
-    self.orders.not_in_progress.where.not(:completed_at => nil).order(completed_at: :desc).first
+  def last_placed_order
+    self.orders.not_in_progress.order(completed_at: :desc).first
   end
 
-  def get_last_credit_card
+  def last_credit_card
     self.credit_cards.order('id DESC').first
   end
 

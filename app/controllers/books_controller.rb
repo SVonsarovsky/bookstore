@@ -3,8 +3,8 @@ class BooksController < ApplicationController
 
   def index
     if params.has_key?(:category_id)
-      @category = categories.select{|category| category.id == params[:category_id].to_i}.first
-      @books = @category.get_books(params[:page])
+      @category = Category.find(params[:category_id])
+      @books = @category.books.order(:title).page(params[:page])
     else
       @category = Category.new
       @books = Book.order(:title).page(params[:page])
@@ -12,7 +12,7 @@ class BooksController < ApplicationController
   end
 
   def show
-    @book = Book.find(params[:id].to_i)
+    @book = Book.find(params[:id])
   end
 
   def home

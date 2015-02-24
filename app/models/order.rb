@@ -1,4 +1,7 @@
 class Order < ActiveRecord::Base
+  STATES = %w(in_progress in_queue in_delivery delivered canceled)
+  STATE_IN_PROGRESS = 'in_progress'
+
   include AASM
 
   has_many :order_items, dependent: :destroy
@@ -12,9 +15,9 @@ class Order < ActiveRecord::Base
   validates :shipping_cost, numericality: {:greater_than_or_equal_to => 0}, allow_blank: true
   validates :state, :user, presence: true
 
-  scope :not_in_progress, -> { where.not(state: 'in_progress') }
+  scope :not_in_progress, -> { where.not(state: STATE_IN_PROGRESS) }
 
-  enum state: %w(in_progress in_queue in_delivery delivered canceled)
+  enum state: STATES
   aasm :column => :state, :enum => true, :whiny_transitions => false do
     state :in_progress, :initial => true
     state :in_queue
@@ -22,7 +25,7 @@ class Order < ActiveRecord::Base
     state :delivered
     state :canceled
 
-    event :checkout, :after => :update_sold_count do
+    event :checkout, :before => :set_completed_at, :after => :update_sold_count do
       transitions :from => :in_progress, :to => :in_queue
     end
     event :confirm do
@@ -85,10 +88,16 @@ class Order < ActiveRecord::Base
   end
 
   protected
+  def set_completed_at
+    self.completed_at = Time.zone.now
+  end
+
   def update_sold_count
+    return false if self.state == STATE_IN_PROGRESS
     self.order_items.each do |item|
-      Book.update(item.book_id, :sold_count => OrderItem.where(book_id: item.book_id).sum(:quantity))
+      Book.where(id: item.book_id).update_all("sold_count = sold_count + #{item.quantity}")
     end
+    return true
   end
 
   def set_totals

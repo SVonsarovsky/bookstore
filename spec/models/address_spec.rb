@@ -11,8 +11,8 @@ RSpec.describe Address, :type => :model do
     expect(address).to validate_presence_of(:zip_code)
   end
 
-  it 'has a zip code in correct format' do
-    expect(address.zip_code).to match(/[0-9]{5}/)
+  it 'has a zip code only in correct format' do
+    expect(address).to allow_value('12345').for(:zip_code)
   end
 
   it 'has a city' do
@@ -39,23 +39,40 @@ RSpec.describe Address, :type => :model do
     expect(address).to belong_to(:user)
   end
 
-  context '#used_in_placed_orders?' do
-    let(:states_not_in_progress) { %w(in_queue in_delivery delivered canceled) }
-    it 'returns true if used as billing address' do
-      FactoryGirl.create(:order, state: states_not_in_progress.sample, billing_address: address, user: address.user)
-      expect(address.used_in_placed_orders?).to eq true
+  describe '#used_in_placed_orders?' do
+    context 'when address was used as both billing and shipping address' do
+      it 'returns true' do
+        FactoryGirl.create(:order_not_in_progress, billing_address: address, shipping_address: address, user: address.user)
+        expect(address).to be_used_in_placed_orders
+      end
     end
-    it 'returns true if used as shipping address' do
-      FactoryGirl.create(:order, state: states_not_in_progress.sample, shipping_address: address, user: address.user)
-      expect(address.used_in_placed_orders?).to eq true
+
+    context 'when address was used as billing address' do
+      it 'returns true' do
+        FactoryGirl.create(:order_not_in_progress, billing_address: address, user: address.user)
+        expect(address).to be_used_in_placed_orders
+      end
     end
-    it 'returns false if not used' do
-      FactoryGirl.create(:order, state: states_not_in_progress.sample, user: address.user)
-      expect(address.used_in_placed_orders?).to eq false
+
+    context 'when address was used as shipping address' do
+      it 'returns true' do
+        FactoryGirl.create(:order_not_in_progress, shipping_address: address, user: address.user)
+        expect(address.used_in_placed_orders?).to eq true
+      end
     end
-    it 'returns false if there are no placed orders' do
-      FactoryGirl.create(:order)
-      expect(address.used_in_placed_orders?).to eq false
+
+    context 'when address was not used before' do
+      it 'returns false' do
+        FactoryGirl.create(:order_not_in_progress, user: address.user)
+        expect(address).not_to be_used_in_placed_orders
+      end
+    end
+
+    context 'when there are on placed orders' do
+      it 'returns false' do
+        FactoryGirl.create(:order, user: address.user)
+        expect(address).not_to be_used_in_placed_orders
+      end
     end
   end
 

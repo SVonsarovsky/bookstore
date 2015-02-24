@@ -32,8 +32,12 @@ RSpec.describe Order, :type => :model do
     expect(order).to validate_presence_of(:state)
   end
 
+  it 'has a state as enum' do
+    expect(order).to define_enum_for(:state).with(Order::STATES)
+  end
+
   it 'has a default state "in_progress"' do
-    expect(order.state).to eq 'in_progress'
+    expect(order.state).to eq Order::STATE_IN_PROGRESS
   end
 
   it 'gets a status' do
@@ -82,13 +86,11 @@ RSpec.describe Order, :type => :model do
 
   context '.not_in_progress' do
     it 'does not include orders with state "in_progress"' do
-      order_in_progress = FactoryGirl.create(:order, state: 'in_progress')
-      expect(Order.not_in_progress).not_to include(order_in_progress)
+      expect(Order.not_in_progress).not_to include(order)
     end
 
     it 'includes orders with state different from "in_progress"' do
-      order_not_in_progress = FactoryGirl.create(:order, state: %w(in_queue in_delivery delivered canceled).sample)
-      expect(Order.not_in_progress).to include(order_not_in_progress)
+      expect(Order.not_in_progress).to include(FactoryGirl.create(:order_not_in_progress))
     end
   end
 
@@ -104,8 +106,8 @@ RSpec.describe Order, :type => :model do
       expect(state_after).to eq state_to
     end
 
-    def unsuccessful_event(event, initial_states)
-      order = FactoryGirl.create(:order, state: initial_states.sample)
+    def unsuccessful_event(event, possible_state)
+      order = FactoryGirl.create(:order, state: Array.new(Order::STATES).delete_if{|state| state == possible_state}.sample)
       state_before = order.state
       checkout_result = order.send("#{event}!")
       state_after = order.state
@@ -114,17 +116,22 @@ RSpec.describe Order, :type => :model do
     end
 
     context '#checkout' do
-      it 'changes state from "in_progress" to "in_queue"' do
-        successful_event('checkout', 'in_progress', 'in_queue')
-      end
-
-      it 'does not change state when it is different from "in_progress"' do
-        unsuccessful_event('checkout', %w(in_queue in_delivery delivered canceled))
+      it 'calls set_completed_at in case of checkout event' do
+        expect(order).to receive(:set_completed_at)
+        order.checkout
       end
 
       it 'calls update_sold_count in case of checkout event' do
         expect(order).to receive(:update_sold_count)
         order.checkout
+      end
+
+      it 'changes state from "in_progress" to "in_queue"' do
+        successful_event('checkout', 'in_progress', 'in_queue')
+      end
+
+      it 'does not change state when it is different from "in_progress"' do
+        unsuccessful_event('checkout', 'in_progress')
       end
     end
 
@@ -134,7 +141,7 @@ RSpec.describe Order, :type => :model do
       end
 
       it 'does not change state when it is different from "in_queue"' do
-        unsuccessful_event('confirm', %w(in_progress in_delivery delivered canceled))
+        unsuccessful_event('confirm', 'in_queue')
       end
     end
 
@@ -144,7 +151,7 @@ RSpec.describe Order, :type => :model do
       end
 
       it 'does not change state when it is different from "in_queue"' do
-        unsuccessful_event('cancel', %w(in_progress in_delivery delivered canceled))
+        unsuccessful_event('cancel', 'in_queue')
       end
     end
 
@@ -154,7 +161,7 @@ RSpec.describe Order, :type => :model do
       end
 
       it 'does not change state when it is different from "in_delivery"' do
-        unsuccessful_event('deliver', %w(in_progress in_queue delivered canceled))
+        unsuccessful_event('deliver', 'in_delivery')
       end
     end
   end
@@ -249,13 +256,33 @@ RSpec.describe Order, :type => :model do
     end
   end
 
+  context '#set_completed_at' do
+    it 'sets current date & time in completed_at field' do
+      Timecop.freeze
+      order.send(:set_completed_at)
+      expect(order.completed_at).to eq(Time.zone.now)
+    end
+
+    it 'sets current date & time wich saves only after checkout' do
+      expect(order.completed_at).to be nil
+      order.send(:set_completed_at)
+      order.reload
+      expect(order.completed_at).to be nil
+      order.checkout!
+      expect(order.completed_at).not_to be nil
+    end
+  end
+
   context '#update_sold_count' do
-    it 'updates sold_count param for each book in order' do
+    it 'updates sold_count param for each book in order only after checkout' do
       book1 = FactoryGirl.create(:book)
       book2 = FactoryGirl.create(:book)
       order.add_book(book1, 1)
       order.add_book(book2, 3)
       order.send(:update_sold_count)
+      expect(Book.find(book1.id).sold_count).to eq 0
+      expect(Book.find(book2.id).sold_count).to eq 0
+      order.checkout!
       expect(Book.find(book1.id).sold_count).to eq 1
       expect(Book.find(book2.id).sold_count).to eq 3
     end
