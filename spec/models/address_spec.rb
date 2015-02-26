@@ -68,7 +68,7 @@ RSpec.describe Address, :type => :model do
       end
     end
 
-    context 'when there are on placed orders' do
+    context 'when there are no placed orders' do
       it 'returns false' do
         FactoryGirl.create(:order, user: address.user)
         expect(address).not_to be_used_in_placed_orders

@@ -11,7 +11,6 @@ RSpec.describe CheckoutController, :type => :controller do
   end
 
   describe 'GET #show' do
-    puts self.class
     describe 'rescue_from nonexistent step' do
       it 'rescues from Wicked::Wizard::InvalidStepError' do
         get :show, id: 'nonexistent_step'

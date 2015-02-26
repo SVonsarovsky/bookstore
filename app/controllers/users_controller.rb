@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  include FormProcessing
+  include CommonInForms
   before_action :require_login, :set_data
 
   # GET /user/edit

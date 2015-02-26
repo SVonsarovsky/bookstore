@@ -2,7 +2,7 @@ require 'rails_helper'
 
 class FakesController < ApplicationController
   include CheckoutWizard
-  include FormProcessing
+  include CommonInForms
 end
 
 describe FakesController do
@@ -18,7 +18,6 @@ describe FakesController do
         expect(controller).to receive("before_#{step}_show".to_sym)
         controller.before_show(step)
       end
-
     end
   end
 
@@ -170,7 +169,51 @@ describe FakesController do
   end
 
   describe '#process_shipping' do
+    before(:each) do
+      controller.instance_variable_set('@order', FactoryGirl.create(:order))
+    end
+    let(:shipping_params) do
+      shipping_method = FactoryGirl.create(:shipping_method)
+      {'shipping_method_id' => shipping_method.id, 'shipping_cost' => shipping_method.cost }
+    end
 
+    context 'with valid shipping attributes' do
+      before(:each) do
+        allow(controller).to receive(:shipping_params).and_return shipping_params
+      end
+      it 'receives save_credit_card for @order which returns true' do
+        expect(controller.instance_variable_get('@order')).to receive(:update).with(shipping_params).and_return true
+        controller.process_shipping
+      end
+
+      it 'sets successful notice for @notice' do
+        allow(controller.instance_variable_get('@order')).to receive(:update).with(shipping_params).and_return true
+        controller.process_shipping
+        expect(controller.instance_variable_get('@notice')).not_to be_nil
+      end
+    end
+
+    context 'with forbidden shipping attributes' do
+      it 'generates NoMethodError error without shipping params' do
+        expect { controller.process_payment }.to raise_error(NoMethodError)
+      end
+
+      it 'filters forbidden params' do
+        allow(controller).to receive(:shipping_params).and_return shipping_params
+        shipping_params.merge(user_id: 100)
+        expect(controller.instance_variable_get('@order')).to receive(:update).with(shipping_params).and_return true
+        controller.process_shipping
+      end
+    end
+
+    context 'with invalid shipping attributes' do
+      it 'receives set_errors_for' do
+        allow(controller).to receive(:shipping_params).and_return shipping_params
+        allow(controller.instance_variable_get('@order')).to receive(:update).and_return(false)
+        expect(controller).to receive(:set_errors_for)
+        controller.process_shipping
+      end
+    end
   end
 
   describe '#process_payment' do
@@ -182,7 +225,6 @@ describe FakesController do
     context 'with valid credit card attributes' do
       before(:each) do
         allow(controller).to receive(:credit_card_params).and_return credit_card_params
-        allow(controller).to receive(:set_errors_for)
       end
 
       it 'receives save_credit_card for @order which returns true' do
@@ -197,7 +239,7 @@ describe FakesController do
       end
     end
 
-    context 'with forbidden attributes' do
+    context 'with forbidden credit card attributes' do
       it 'generates NoMethodError error without credit card params' do
         expect { controller.process_payment }.to raise_error(NoMethodError)
       end
@@ -210,20 +252,27 @@ describe FakesController do
       end
     end
 
-    context 'with invalid attributes' do
-      xit 'receives save_credit_card for @order which returns false' do
+    context 'with invalid credit card attributes' do
+      before(:each) do
+        allow(controller).to receive(:credit_card_params).and_return credit_card_params
+        allow(controller.instance_variable_get('@order')).to receive(:save_credit_card).and_return(false)
       end
 
-      xit 'receives CreditCard.new with credit_card_params' do
+      it 'receives set_errors_for' do
+        expect(controller).to receive(:set_errors_for)
+        controller.process_payment
       end
 
-      xit 'assigns @credit_card as a CreditCard instance' do
+      it 'receives CreditCard.new with credit_card_params' do
+        allow(controller).to receive(:set_errors_for)
+        expect(CreditCard).to receive(:new).with credit_card_params
+        controller.process_payment
       end
 
-      xit 'receives set_errors_for' do
-      end
-
-      xit 'sets errors to @errors array' do
+      it 'assigns @credit_card as a CreditCard instance' do
+        allow(controller).to receive(:set_errors_for)
+        controller.process_payment
+        expect(controller.instance_variable_get('@credit_card')).to be_a CreditCard
       end
     end
   end

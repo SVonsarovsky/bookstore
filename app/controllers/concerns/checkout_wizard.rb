@@ -49,7 +49,9 @@ module CheckoutWizard
       @notice = 'Your addresses have been saved.'
     else
       @billing_address  = Address.new(address_params('billing'))
+      set_errors_for 'order', 'billing_address'  if @billing_address.invalid?
       @shipping_address = Address.new(address_params('shipping'))
+      set_errors_for 'order', 'shipping_address' if @shipping_address.invalid?
     end
   end
 
@@ -87,12 +89,14 @@ module CheckoutWizard
   def save_address(type)
     if type == 'shipping' && params.has_key?(:use_billing_address)
       @order.send(type+'_address_id=', @order.billing_address_id)
-      set_errors_for 'order', "#{type}_address" and return false unless @order.save
+      return @order.save
     end
-    set_errors_for 'user', "#{type}_address" and return false unless @user.save_address(address_params(type).merge(type: type))
+    unless @user.save_address(address_params(type).merge(type: type))
+      set_errors_for 'user', "#{type}_address"
+      return false
+    end
     @order.send(type+'_address_id=', @user.send("#{type}_address_id"))
-    set_errors_for 'order', "#{type}_address" and return false unless @order.save
-    true
+    @order.save
   end
 
   def shipping_params

@@ -1,5 +1,5 @@
 class CheckoutController < ApplicationController
-  include FormProcessing
+  include CommonInForms
   include Wicked::Wizard
   include CheckoutWizard
   steps :address, :shipping, :payment, :confirm, :complete
