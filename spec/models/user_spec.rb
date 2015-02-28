@@ -159,9 +159,9 @@ RSpec.describe User, :type => :model do
 
   context '#last_placed_order' do
     it 'returns last placed order' do
-              FactoryGirl.create(:order_not_in_progress, user: user)
-      order = FactoryGirl.create(:order_not_in_progress, user: user)
-      expect(user.last_placed_order.id).to eq(order.id)
+      order1 = FactoryGirl.create(:order_not_in_progress, user: user)
+      order2 = FactoryGirl.create(:order_not_in_progress, user: user) if order1.persisted?
+      expect(user.last_placed_order.id).to eq(order2.id)
     end
     it 'does not return just last order, only placed order' do
       order = FactoryGirl.create(:order_not_in_progress, user: user)
