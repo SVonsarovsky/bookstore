@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   end
 
   def last_placed_order
-    self.orders.not_in_progress.order(completed_at: :desc).first
+    self.orders.not_in_progress.order(completed_at: :desc, id: :desc).first
   end
 
   def last_credit_card
