@@ -36,7 +36,9 @@
             <div class="pull-right">
                 <h2>ORDER SUMMARY</h2>
                 <div class="summary-price">
-                    $<%= @order.total_price %><br />$<%= @order.shipping_cost %><br />$<%= (@order.total_price+@order.shipping_cost) %>
+                    <%= number_to_currency(@order.total_price) %><br />
+                    <%= number_to_currency(@order.shipping_cost) %><br />
+                    <%= number_to_currency(@order.total_price+@order.shipping_cost) %>
                 </div>
                 <div class="summary-title">
                     <nobr>ITEMS TOTAL:</nobr><br />

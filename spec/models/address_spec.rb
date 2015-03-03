@@ -12,7 +12,7 @@ RSpec.describe Address, :type => :model do
   end
 
   it 'has a zip code only in correct format' do
-    expect(address).to allow_value('12345').for(:zip_code)
+    expect(FactoryGirl.build(:address, zip_code: '123!5')).not_to be_valid
   end
 
   it 'has a city' do
@@ -57,7 +57,7 @@ RSpec.describe Address, :type => :model do
     context 'when address was used as shipping address' do
       it 'returns true' do
         FactoryGirl.create(:order_not_in_progress, shipping_address: address, user: address.user)
-        expect(address.used_in_placed_orders?).to eq true
+        expect(address).to be_used_in_placed_orders
       end
     end
 

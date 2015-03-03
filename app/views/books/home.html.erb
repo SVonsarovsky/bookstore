@@ -22,7 +22,7 @@
           <p><%= book.short_description %></p>
           <%= form_tag(cart_path, :method => 'post', :class => 'form-inline') do %>
             <%= hidden_field_tag(:book_id, book.id) %>
-            <span class="price">$ <%= book.price %></span>
+            <span class="price"><%= number_to_currency(book.price) %></span>
             <%= number_field_tag(:quantity, 1, {:min => 1, :max => 20, :class => 'form-control quantity'}) %>
             <%= submit_tag('Add To Cart', :class => 'btn btn-default') %>
           <% end %>

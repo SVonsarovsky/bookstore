@@ -1,5 +1,73 @@
 require 'rails_helper'
 
+shared_examples 'a user who saves address' do
+  let(:address_params) { FactoryGirl.attributes_for(:address, user: user).merge(:type => address_type) }
+
+  describe '#save_address' do
+    it 'updates data of address previously saved for the order' do
+      address = FactoryGirl.create(:address, user: user)
+      user.update("#{address_type}_address_id".to_sym => address.id)
+      expect(user.save_address(address_params)).to eq true
+      expect(User.find(user.id).send("#{address_type}_address_id")).to eq address.id
+    end
+
+    context 'when address is invalid' do
+      it 'returns false ' do
+        rand_123_number = [1, 2, 3].sample
+        address_params[:address]  = '' if (rand_123_number&1 > 0)
+        address_params[:zip_code] = '' if (rand_123_number&2 > 0)
+        expect(user.save_address(address_params)).to eq false
+      end
+    end
+
+    context 'when address was not set previously' do
+      it 'creates new address and set it to user' do
+        expect(user.save_address(address_params)).to eq true
+        expect(user.send("#{address_type}_address").id).to be > 0
+      end
+
+      it 'finds existing address and set it to user' do
+        address = FactoryGirl.create(:address, address_params.except(:type))
+        expect(user.save_address(address_params)).to eq true
+        expect(User.find(user.id).send("#{address_type}_address_id")).to eq address.id
+      end
+    end
+
+    context 'when billing and shipping address ids are the same' do
+      it 'creates new address and set it to user' do
+        address = FactoryGirl.create(:address, user: user)
+        user.update(billing_address_id: address.id, shipping_address_id: address.id)
+        expect(user.save_address(address_params)).to eq true
+        expect(User.find(user.id).send("#{address_type}_address_id")).not_to eq address.id
+      end
+
+      it 'finds existing address and set it to user' do
+        address = FactoryGirl.create(:address, address_params.except(:type))
+        user.update(billing_address_id: address.id, shipping_address_id: address.id)
+        expect(user.save_address(address_params)).to eq true
+        expect(User.find(user.id).send("#{address_type}_address_id")).to eq address.id
+      end
+    end
+
+    context 'when address was used in placed orders' do
+      it 'creates new address and set it to user' do
+        address = FactoryGirl.create(:address, user: user)
+        user.update("#{address_type}_address_id".to_sym => address.id)
+        FactoryGirl.create(:order_not_in_progress, user: user, "#{address_type}_address".to_sym => address)
+        expect(user.save_address(address_params)).to eq true
+        expect(User.find(user.id).send("#{address_type}_address_id")).not_to eq address.id
+      end
+
+      it 'finds existing address and set it to user' do
+        address = FactoryGirl.create(:address, address_params.except(:type))
+        FactoryGirl.create(:order_not_in_progress, user: user, "#{address_type}_address".to_sym => address)
+        expect(user.save_address(address_params)).to eq true
+        expect(User.find(user.id).send("#{address_type}_address_id")).to eq address.id
+      end
+    end
+  end
+end
+
 RSpec.describe User, :type => :model do
 
   let(:user) { FactoryGirl.create :user }
@@ -60,69 +128,15 @@ RSpec.describe User, :type => :model do
     expect(user).to belong_to(:shipping_address)
   end
 
-  describe '#save_address' do
-    let(:address_params) { FactoryGirl.attributes_for(:address, user: user) }
-
-    it 'updates data of address previously saved for the order' do
-      address = FactoryGirl.create(:address, user: user)
-      user.update(billing_address_id: address.id)
-      expect(user.save_address(address_params.merge(:type => 'billing'))).to eq true
-      expect(User.find(user.id).billing_address_id).to eq address.id
+  context 'when saving billing address' do
+    it_behaves_like 'a user who saves address' do
+      let(:address_type) { 'billing' }
     end
+  end
 
-    context 'when address is invalid' do
-      it 'returns false ' do
-        rand_123_number = [1, 2, 3].sample
-        address_params[:address]  = '' if (rand_123_number&1 > 0)
-        address_params[:zip_code] = '' if (rand_123_number&2 > 0)
-        expect(user.save_address(address_params.merge(:type => 'billing'))).to eq false
-      end
-    end
-
-    context 'when address was not set previously' do
-      it 'creates new address and set it to user' do
-        expect(user.save_address(address_params.merge(:type => 'billing'))).to eq true
-        expect(user.billing_address.id).to be > 0
-      end
-
-      it 'finds existing address and set it to user' do
-        address = FactoryGirl.create(:address, address_params)
-        expect(user.save_address(address_params.merge(:type => 'billing'))).to eq true
-        expect(User.find(user.id).billing_address_id).to eq address.id
-      end
-    end
-
-    context 'when billing and shipping address ids are the same' do
-      it 'creates new address and set it to user' do
-        address = FactoryGirl.create(:address, user: user)
-        user.update(billing_address_id: address.id, shipping_address_id: address.id)
-        expect(user.save_address(address_params.merge(:type => 'billing'))).to eq true
-        expect(User.find(user.id).billing_address_id).not_to eq address.id
-      end
-
-      it 'finds existing address and set it to user' do
-        address = FactoryGirl.create(:address, address_params)
-        user.update(billing_address_id: address.id, shipping_address_id: address.id)
-        expect(user.save_address(address_params.merge(:type => 'billing'))).to eq true
-        expect(User.find(user.id).billing_address_id).to eq address.id
-      end
-    end
-
-    context 'when address was used in placed orders' do
-      it 'creates new address and set it to user' do
-        address = FactoryGirl.create(:address, user: user)
-        user.update(billing_address_id: address.id)
-        FactoryGirl.create(:order_not_in_progress, user: user, billing_address: address)
-        expect(user.save_address(address_params.merge(:type => 'billing'))).to eq true
-        expect(User.find(user.id).billing_address_id).not_to eq address.id
-      end
-
-      it 'finds existing address and set it to user' do
-        address = FactoryGirl.create(:address, address_params)
-        FactoryGirl.create(:order_not_in_progress, user: user, billing_address: address)
-        expect(user.save_address(address_params.merge(:type => 'billing'))).to eq true
-        expect(User.find(user.id).billing_address_id).to eq address.id
-      end
+  context 'when saving shipping address' do
+    it_behaves_like 'a user who saves address' do
+      let(:address_type) { 'shipping' }
     end
   end
 

@@ -19,9 +19,9 @@
                     <div><%= item.book.title %></div>
                     <p><%= item.book.short_description %></p>
                 </td>
-                <td class="price">$<%= item.price %></td>
+                <td class="price"><%= number_to_currency(item.price) %></td>
                 <td><%= number_field_tag('quantity['+item.id.to_s+']', item.quantity, {:min => 1, :max => 20, :class => 'form-control quantity'}) %></td>
-                <td class="price">$<%= number_with_precision(item.price*item.quantity, precision: 2) %></td>
+                <td class="price"><%= number_to_currency(item.price*item.quantity) %></td>
                 <td class="price remove"><%= link_to('&times;'.html_safe, item_cart_path(item.id), {:method => 'delete'}) %></td>
             </tr>
             <%- end %>

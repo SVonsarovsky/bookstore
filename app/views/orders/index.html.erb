@@ -5,7 +5,7 @@
     <div class="order">
         <%= render 'shared/order', order_items: @order_items %>
         <div class="clearfix">
-            <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong>$<%= @order.total_price %></strong></div>
+            <div class="subtotal pull-right">SUBTOTAL: &nbsp; <strong><%= number_to_currency(@order.total_price) %></strong></div>
             <%= link_to 'GO TO CART', cart_path, class: 'btn btn-default' %>
         </div>
     </div>
@@ -36,7 +36,7 @@
       <tr>
         <td><%= order.display_number %></td>
         <td><%= date_format(order.completed_at) %></td>
-        <td>$<%= (order.total_price+order.shipping_cost) %></td>
+        <td><%= number_to_currency(order.total_price+order.shipping_cost) %></td>
         <td><%= link_to 'View', order_path(order) %></td>
       </tr>
     <%- previous_state = order.state %>

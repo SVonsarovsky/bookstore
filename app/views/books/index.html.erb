@@ -14,7 +14,7 @@
             <div class="col-md-4">
                 <%= link_to(image_tag(book.image.carousel, :alt => book.title, :class => 'img-thumbnail'), book_path(book)) %>
                 <h5><%= link_to book.title, book_path(book) %></h5>
-                <div class="price">$<%= book.price %></div>
+                <div class="price"><%= number_to_currency(book.price) %></div>
             </div>
             <% end %>
         </div>

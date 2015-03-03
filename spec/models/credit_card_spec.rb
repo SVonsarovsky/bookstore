@@ -21,7 +21,7 @@ RSpec.describe CreditCard, :type => :model do
   end
 
   it 'has a number in format 0000-0000-0000-0000' do
-    expect(credit_card).to allow_value('3120-0000-0000-0034').for(:number)
+    expect(FactoryGirl.build(:credit_card, number: '3120-0000-0000!0034')).not_to be_valid
   end
 
   it 'has a code' do
@@ -29,7 +29,7 @@ RSpec.describe CreditCard, :type => :model do
   end
 
   it 'has a code in format 000' do
-    expect(credit_card).to allow_value('312').for(:code)
+    expect(FactoryGirl.build(:credit_card, code: '2!4')).not_to be_valid
   end
 
   it 'has an expiration_month' do

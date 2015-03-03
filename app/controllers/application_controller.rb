@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
 
   def cart_details
     order = current_order
-    (order.nil? || order.total_items == 0) ? '(EMPTY)' : '(' + order.total_items.to_s+') $' +order.total_price.to_s
+    (order.nil? || order.total_items == 0) ? '(EMPTY)' : "(#{order.total_items}) #{ActionController::Base.helpers.number_to_currency(order.total_price)}"
   end
 
   def after_sign_in_path_for(resource)

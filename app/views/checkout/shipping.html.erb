@@ -15,7 +15,7 @@
                     <label>
                         <%= hidden_field_tag("shipping_method_id_#{shipping.id}", shipping.cost) %>
                         <%= radio_button_tag('shipping_method_id', shipping.id, shipping.id==@shipping_method.id) %>
-                        <%= shipping.name %> + $<%= shipping.cost %>
+                        <%= shipping.name %> + <%= number_to_currency(shipping.cost) %>
                     </label>
                 </div>
                 <%- end %>
@@ -28,9 +28,9 @@
             <div class="pull-right">
                 <h2>ORDER SUMMARY</h2>
                 <div class="summary-price">
-                    $<span id="checkout_items_total"><%= @order.total_price %></span><br />
-                    $<span id="checkout_shipping"><%= @shipping_method.cost %></span><br />
-                    $<span id="checkout_order_total"><%= (@order.total_price+@shipping_method.cost) %></span>
+                    <%= I18n.t('number.currency.format.unit') %><span id="checkout_items_total"><%= @order.total_price %></span><br />
+                    <%= I18n.t('number.currency.format.unit') %><span id="checkout_shipping"><%= @shipping_method.cost %></span><br />
+                    <%= I18n.t('number.currency.format.unit') %><span id="checkout_order_total"><%= (@order.total_price+@shipping_method.cost) %></span>
                 </div>
                 <div class="summary-title">
                     <nobr>ITEMS TOTAL:</nobr><br />

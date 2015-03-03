@@ -29,14 +29,14 @@
     <div class="clearfix">
         <div class="pull-right">
             <div class="subtotal clearfix">
-                <div class="pull-right"><strong>$<%= @order.total_price %></strong><br /><strong>$<%= @order.shipping_cost %></strong></div>
+                <div class="pull-right"><strong><%= number_to_currency(@order.total_price) %></strong><br /><strong><%= number_to_currency(@order.shipping_cost) %></strong></div>
                 <div class="pull-right">SUBTOTAL: &nbsp; <br />SHIPPING: &nbsp; </div>
             </div>
         </div>
     </div>
     <div class="clearfix total">
         <div class="pull-right subtotal">
-            ORDER TOTAL: &nbsp; <strong>$<%= (@order.total_price+@order.shipping_cost) %></strong>
+            ORDER TOTAL: &nbsp; <strong><%= number_to_currency(@order.total_price+@order.shipping_cost) %></strong>
         </div>
     </div>
     <%= link_to('GO BACK TO STORE', shop_path, {:class => 'btn btn-default'}) %>

@@ -7,7 +7,7 @@
           <%= number_field_tag(:quantity, 1, {:min => 1, :max => 20, :class => 'form-control quantity'}) %>
           <%= submit_tag('Add To Cart', :class => 'btn btn-default') %>
       </div>
-      <div class="price">$ <%= @book.price %></div>
+      <div class="price"><%= number_to_currency(@book.price) %></div>
       <p><%= @book.full_description.html_safe %></p>
     <% end %>
 </div>

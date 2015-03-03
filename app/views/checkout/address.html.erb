@@ -22,7 +22,7 @@
             <div class="pull-right">
                 <h2>ORDER SUMMARY</h2>
                 <div class="summary-price">
-                    $<%= @order.total_price %><br />$<%= @order.total_price %>
+                    <%= number_to_currency(@order.total_price) %><br /><%= number_to_currency(@order.total_price) %>
                 </div>
                 <div class="summary-title">
                     <nobr>ITEMS TOTAL:</nobr><br /><nobr>ORDER TOTAL:</nobr>

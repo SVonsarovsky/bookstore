@@ -31,4 +31,12 @@ en:
       in_delivery: 'in delivery'
       canceled: 'canceled'
       delivered: 'delivered'
+  number:
+    currency:
+      format:
+        unit: '$'
+        delimiter: ','
+        separator: '.'
+        precision: 2
+        format: '%u%n'
   welcome: "Welcome to our amazing Bookstore! Choose anything you wish, we'll ship it anywhere!"
