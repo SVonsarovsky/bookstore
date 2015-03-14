@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
   devise_for :admins
   mount RailsAdmin::Engine => '/admins', as: 'rails_admin'
-  devise_for :users
+  devise_for :users, :controllers => { :omniauth_callbacks => 'users/omniauth_callbacks' }
   devise_scope :user do
     get  '/sign-up' => 'devise/registrations#new'
     get  '/sign-in' => 'devise/sessions#new'

@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+  devise :omniauthable, :omniauth_providers => [:facebook]
 
   mount_uploader :photo, PhotoUploader
   has_many :orders, dependent: :nullify
@@ -14,6 +15,14 @@ class User < ActiveRecord::Base
 
   belongs_to :billing_address, class_name: 'Address'
   belongs_to :shipping_address, class_name: 'Address'
+
+  def self.find_for_facebook_oauth(auth)
+    if user = User.find_by(email: auth.info.email)
+      user
+    else
+      User.create(email: auth.info.email, password: Devise.friendly_token[0,20])
+    end
+  end
 
   def name
     email.split('@').first
