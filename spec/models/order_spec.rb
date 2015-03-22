@@ -4,20 +4,8 @@ RSpec.describe Order, :type => :model do
 
   let(:order) { FactoryGirl.create :order }
 
-  it 'is able to return a total price of the order' do
-    expect(order).to respond_to :total_price
-  end
-
-  it 'is able to return an amount of items in the order' do
-    expect(order).to respond_to :total_items
-  end
-
   it 'is able to return books' do
     expect(order).to respond_to :books
-  end
-
-  it 'is able to return display number' do
-    expect(order).to respond_to :display_number
   end
 
   it 'has a completed date' do
@@ -82,6 +70,31 @@ RSpec.describe Order, :type => :model do
 
   it 'has a numeric shipping cost greater or equal to 0' do
     expect(order).to validate_numericality_of(:shipping_cost).is_greater_than_or_equal_to(0)
+  end
+
+  it 'gets order total price' do
+    book1 = FactoryGirl.create(:book, price: 1.99)
+    book2 = FactoryGirl.create(:book, price: 2.99)
+    order.add_book(book1, 1)
+    order.add_book(book2, 2)
+    expect(order.total_price).to eq 7.97
+  end
+
+  it 'gets order total items quantity' do
+    book1 = FactoryGirl.create(:book)
+    book2 = FactoryGirl.create(:book)
+    order.add_book(book1, 5)
+    order.add_book(book2, 2)
+    expect(order.total_items).to eq 7
+  end
+
+  context '#display_number' do
+    it 'starts with R letter' do
+      expect(order.display_number).to start_with 'R'
+    end
+    it 'has contains order number after R letter' do
+      expect(order.display_number).to end_with order.number.to_s
+    end
   end
 
   context '.not_in_progress' do
@@ -287,25 +300,4 @@ RSpec.describe Order, :type => :model do
       expect(Book.find(book2.id).sold_count).to eq 3
     end
   end
-
-  context '#set_totals' do
-    it 'sets order total price' do
-      book1 = FactoryGirl.create(:book)
-      book2 = FactoryGirl.create(:book)
-      order.add_book(book1, 5)
-      order.add_book(book2, 2)
-      order.send(:set_totals)
-      expect(order.total_items).to eq 7
-    end
-
-    it 'sets order total items quantity' do
-      book1 = FactoryGirl.create(:book, price: 1.99)
-      book2 = FactoryGirl.create(:book, price: 2.99)
-      order.add_book(book1, 1)
-      order.add_book(book2, 2)
-      order.send(:set_totals)
-      expect(order.total_price).to eq 7.97
-    end
-  end
-
 end

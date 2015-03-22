@@ -74,12 +74,12 @@ class Order < ActiveRecord::Base
   end
 
   def total_price
-    set_totals if @total_price.nil?
+    @total_price = self.order_items.sum('quantity*price') if @total_price.nil?
     @total_price
   end
 
   def total_items
-    set_totals if @total_items.nil?
+    @total_items = self.order_items.sum(:quantity) if @total_items.nil?
     @total_items
   end
 
@@ -99,11 +99,4 @@ class Order < ActiveRecord::Base
     end
     return true
   end
-
-  def set_totals
-    totals = self.order_items.select('SUM(quantity) as quantity, SUM(quantity*price) as price').first
-    @total_price = totals.price.nil? ? 0 : totals.price
-    @total_items = totals.quantity.nil? ? 0 : totals.quantity
-  end
-
 end
