@@ -41,6 +41,7 @@ gem 'spring',        group: :development
 gem 'execjs'
 gem 'therubyracer'
 
+gem 'pg'
 gem 'devise'
 gem 'omniauth-facebook'
 gem 'cancancan'

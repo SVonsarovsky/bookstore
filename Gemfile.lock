@@ -138,6 +138,7 @@ GEM
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
     orm_adapter (0.5.0)
+    pg (0.18.1)
     rack (1.5.2)
     rack-pjax (0.8.0)
       nokogiri (~> 1.5)
@@ -278,6 +279,7 @@ DEPENDENCIES
   kaminari
   mini_magick
   omniauth-facebook
+  pg
   rails (= 4.1.8)
   rails_admin
   rails_admin_aasm
