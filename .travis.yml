@@ -1,3 +1,7 @@
 language: ruby
 rvm:
   - 2.1.5
+before_script:
+- cp config/database.travis config/database.yml
+- psql -c 'create database travis_test;' -U postgres
+- mysql -e 'create database travis_test'
