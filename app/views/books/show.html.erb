@@ -1,6 +1,6 @@
 <h1><%= @book.title %></h1>
 <div class="book clearfix">
-    <img src="<%= @book.image %>" alt="<%= @book.title %>" class="pull-left" />
+    <%= image_tag(@book.image, :alt => @book.title, :class => 'pull-left') %>
     <%= form_tag(cart_path, :method => 'post', :class => 'form-inline') do %>
       <%= hidden_field_tag(:book_id, @book.id) %>
       <div class="pull-right">

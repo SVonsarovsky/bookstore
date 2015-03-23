@@ -15,4 +15,6 @@
 //= require turbolinks
 //= require bootstrap-sprockets
 //= require jquery-star-rating
+//= require i18n
+//= require i18n/translations
 //= require_tree .

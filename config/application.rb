@@ -30,7 +30,7 @@ module Bookstore
       g.test_framework :rspec
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
-    config.assets.initialize_on_precompile = false
+    #config.assets.initialize_on_precompile = true
     config.time_zone = 'Europe/Kiev'
   end
 end

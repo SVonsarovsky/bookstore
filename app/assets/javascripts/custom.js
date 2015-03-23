@@ -28,8 +28,6 @@ $(document).ready(function(){
         select_shipping_method('input[name="shipping_method_id"]:checked');
     }
 
-
-    
 }); // end ready
 function use_billing_address(e) {
     var checkbox = (typeof e === 'string') ? $(e): $(this);
@@ -41,5 +39,7 @@ function select_shipping_method(e) {
     var shipping = 100*parseFloat($('input[name='+current_radio.attr('id')+']').val())/100;
     $('input[name="shipping_cost"]').val(shipping);
     $('#checkout_shipping').text(shipping);
+    $('#checkout_shipping').prev().text(I18n.toCurrency(shipping));
     $('#checkout_order_total').text(items_total+shipping);
+    $('#checkout_order_total').prev().text(I18n.toCurrency(items_total+shipping));
 }

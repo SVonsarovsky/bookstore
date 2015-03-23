@@ -28,9 +28,9 @@
             <div class="pull-right">
                 <h2>ORDER SUMMARY</h2>
                 <div class="summary-price">
-                    <%= I18n.t('number.currency.format.unit') %><span id="checkout_items_total"><%= @order.total_price %></span><br />
-                    <%= I18n.t('number.currency.format.unit') %><span id="checkout_shipping"><%= @shipping_method.cost %></span><br />
-                    <%= I18n.t('number.currency.format.unit') %><span id="checkout_order_total"><%= (@order.total_price+@shipping_method.cost) %></span>
+                    <div><span><%= number_to_currency(@order.total_price) %></span><span id="checkout_items_total" class="hide"><%= @order.total_price %></span></div>
+                    <div><span><%= number_to_currency(@shipping_method.cost) %></span><span id="checkout_shipping" class="hide"><%= @shipping_method.cost %></span></div>
+                    <div><span><%= number_to_currency(@order.total_price+@shipping_method.cost) %></span><span id="checkout_order_total" class="hide"><%= (@order.total_price+@shipping_method.cost) %></span></div>
                 </div>
                 <div class="summary-title">
                     <nobr>ITEMS TOTAL:</nobr><br />
